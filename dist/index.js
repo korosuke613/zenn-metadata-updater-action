@@ -52,12 +52,12 @@ function run() {
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
             const savedPaths = yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
-            const workflowSha = process.env.GITHUB_SHA;
-            if (!workflowSha) {
-                throw new Error("GITHUB_SHA is undefined");
+            const workflowBaseRef = process.env.GITHUB_BASE_REF;
+            if (!workflowBaseRef) {
+                throw new Error("GITHUB_BASE_REF is undefined");
             }
             for (const savedPath of savedPaths) {
-                const branchName = yield wait_1.pushChange(savedPath, workflowSha, isForcePush);
+                const branchName = yield wait_1.pushChange(savedPath, workflowBaseRef, isForcePush);
                 const workflowBranch = process.env.GITHUB_HEAD_REF;
                 if (!workflowBranch) {
                     throw new Error("GITHUB_HEAD_REF is undefined");

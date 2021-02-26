@@ -135,7 +135,7 @@ export async function pushChange(
   ]);
   await execByThrowError("git", ["add", filePath]);
   await execByThrowError("git", ["push", forceFlag, "origin", branchName]);
-  await execByThrowError("git", ["switch", originalBranch]);
+  await execByThrowError("git", ["checkout", originalBranch]);
 
   return branchName;
 }

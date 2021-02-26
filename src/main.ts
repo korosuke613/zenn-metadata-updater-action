@@ -50,13 +50,13 @@ async function run(): Promise<void> {
       changedMarkdowns
     );
 
-    const workflowRef = process.env.GITHUB_REF;
-    if (!workflowRef) {
+    const workflowSha = process.env.GITHUB_SHA;
+    if (!workflowSha) {
       throw new Error("GITHUB_BASE_REF is undefined");
     }
 
     for (const savedPath of savedPaths) {
-      const branchName = await pushChange(savedPath, workflowRef, isForcePush);
+      const branchName = await pushChange(savedPath, workflowSha, isForcePush);
 
       const workflowBranch = process.env.GITHUB_HEAD_REF;
       if (!workflowBranch) {

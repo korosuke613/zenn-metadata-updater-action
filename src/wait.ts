@@ -113,7 +113,8 @@ export async function createPullRequest(filePath: string) {
     },
   };
 
-  const branchName = `zenn-metadata-updater/${filePath}`;
+  const fileName = filePath.replace(".md", "");
+  const branchName = `zenn-metadata-updater/${fileName}`;
   await exec("git", ["switch", "-c", branchName], options);
   debug(result);
   await exec("git", ["add", filePath], options);

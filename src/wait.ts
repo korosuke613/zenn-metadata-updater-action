@@ -63,15 +63,17 @@ export async function updateMarkdown(
 
 export async function saveUpdatedMarkdown(
   zennMetaData: Partial<ZennMetadata>,
-  changedMarkdowns: string[]
+  changedMarkdowns: string[],
+  postPath: string = ""
 ) {
   for (const markdownPath of changedMarkdowns) {
     const markdown = readFileSync(markdownPath);
     info(`read ${markdownPath}`);
     try {
       const updatedMarkdown = await updateMarkdown(markdown, zennMetaData);
-      writeFileSync(markdownPath, updatedMarkdown);
-      info(`saved ${markdownPath}`);
+      const savePath = markdownPath + postPath;
+      writeFileSync(savePath, updatedMarkdown);
+      info(`saved ${savePath}`);
     } catch (e) {
       if (e instanceof NotEnoughPropertyError) {
         info("this markdown is not Zenn article. Skipped.");

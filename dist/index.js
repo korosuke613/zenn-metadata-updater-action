@@ -19,6 +19,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(2186);
 const wait_1 = __webpack_require__(5817);
+const github_1 = __webpack_require__(5438);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -57,7 +58,8 @@ function run() {
                 if (!workflowBranch) {
                     throw new Error("GITHUB_HEAD_REF is undefined");
                 }
-                yield wait_1.createPullRequest(githubToken, workflowBranch, branchName);
+                const octokit = github_1.getOctokit(githubToken);
+                yield wait_1.createPullRequest(octokit, github_1.context.repo, workflowBranch, branchName);
             }
         }
         catch (error) {
@@ -90,7 +92,6 @@ const exec_1 = __webpack_require__(1514);
 const zenn_metadata_updater_1 = __webpack_require__(5136);
 const core_1 = __webpack_require__(2186);
 const fs_1 = __webpack_require__(5747);
-const github_1 = __webpack_require__(5438);
 function getChangedFiles(githubSha) {
     return __awaiter(this, void 0, void 0, function* () {
         let changedFiles = [];
@@ -213,15 +214,19 @@ function pushChange(filePath, isForcePush) {
     });
 }
 exports.pushChange = pushChange;
-function createPullRequest(githubToken, workflowBranch, branchName) {
+function createPullRequest(octokit, githubRepo, 
+//githubContext: Context,
+workflowBranch, branchName) {
     return __awaiter(this, void 0, void 0, function* () {
-        const githubContext = github_1.context;
-        const octokit = github_1.getOctokit(githubToken);
         try {
-            yield octokit.pulls.create(Object.assign(Object.assign({}, githubContext.repo), { title: `chore: update matadata ${branchName} by zenn-metadata-updater`, head: branchName, base: workflowBranch }));
+            yield octokit.pulls.create(Object.assign(Object.assign({}, githubRepo), { title: `chore: update matadata ${branchName} by zenn-metadata-updater`, head: branchName, base: workflowBranch }));
         }
         catch (e) {
-            core_1.debug(e);
+            const errorMessage = e.errors[0].message;
+            if (errorMessage.startsWith("A pull request already exists for")) {
+                core_1.info(`skip because ${errorMessage}`);
+                return;
+            }
             throw e;
         }
     });

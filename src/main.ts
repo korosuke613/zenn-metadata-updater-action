@@ -7,6 +7,7 @@ import {
   pushChange,
   saveUpdatedMarkdown,
 } from "./wait";
+import { context, getOctokit } from "@actions/github";
 
 async function run(): Promise<void> {
   try {
@@ -56,7 +57,14 @@ async function run(): Promise<void> {
       if (!workflowBranch) {
         throw new Error("GITHUB_HEAD_REF is undefined");
       }
-      await createPullRequest(githubToken, workflowBranch, branchName);
+      const octokit = getOctokit(githubToken);
+
+      await createPullRequest(
+        octokit,
+        context.repo,
+        workflowBranch,
+        branchName
+      );
     }
   } catch (error) {
     setFailed(error.message);

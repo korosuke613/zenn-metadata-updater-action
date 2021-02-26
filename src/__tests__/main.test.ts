@@ -1,4 +1,5 @@
 import {
+  createPullRequest,
   getChangedFiles,
   getMarkdowns,
   saveUpdatedMarkdown,
@@ -6,6 +7,7 @@ import {
 } from "../wait";
 import { Updater, ZennMetadata } from "zenn-metadata-updater";
 import { readFileSync } from "fs";
+import { Octokit } from "@octokit/rest";
 
 // This test fail on CI.
 // test("getFiles", async () => {
@@ -86,3 +88,17 @@ test("saveUpdatedMarkdown", async () => {
 
   expect(actual).toEqual(expected);
 });
+
+// test("createPullRequest", async () => {
+//   const octokit = new Octokit({
+//     auth: "GITHUB_TOKEN",
+//     baseUrl: "https://api.github.com",
+//   });
+//   await createPullRequest(
+//     octokit,
+//     { owner: "korosuke613", repo: "zenn-metadata-updater-action" },
+//     "main",
+//     "zenn-metadata-updater/src/__tests__/sampleMarkdown_md"
+//   );
+//   console.log("finish");
+// });

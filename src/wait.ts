@@ -7,6 +7,8 @@ import {
 import { debug, info } from "@actions/core";
 import { readFileSync, writeFileSync } from "fs";
 import { getOctokit, context } from "@actions/github";
+import { Octokit } from "@octokit/rest";
+import { Context } from "@actions/github/lib/context";
 
 export async function getChangedFiles(githubSha: string): Promise<string[]> {
   let changedFiles: string[] = [];
@@ -134,22 +136,26 @@ export async function pushChange(filePath: string, isForcePush: boolean) {
 }
 
 export async function createPullRequest(
-  githubToken: string,
+  octokit: ReturnType<typeof getOctokit>,
+  githubRepo: { owner: string; repo: string },
+  //githubContext: Context,
   workflowBranch: string,
   branchName: string
 ) {
-  const githubContext = context;
-  const octokit = getOctokit(githubToken);
-
   try {
     await octokit.pulls.create({
-      ...githubContext.repo,
+      ...githubRepo,
       title: `chore: update matadata ${branchName} by zenn-metadata-updater`,
       head: branchName,
       base: workflowBranch,
     });
   } catch (e) {
-    debug(e);
+    const errorMessage: string = e.errors[0].message;
+    if (errorMessage.startsWith("A pull request already exists for")) {
+      info(`skip because ${errorMessage}`);
+      return;
+    }
+
     throw e;
   }
 }

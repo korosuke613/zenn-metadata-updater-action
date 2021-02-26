@@ -100,37 +100,36 @@ export async function saveUpdatedMarkdown(
 //   debug(JSON.stringify(pushResponse, null, 2));
 // }
 
-export async function createPullRequest(filePath: string) {
+async function execByThrowError(commandLine: string, args?: string[]) {
   let result = "";
+
   const options = {
     listeners: {
       stdout: (data: Buffer) => {
         result = data.toString();
       },
       stderr: (data: Buffer) => {
-        throw new Error(data.toString());
+        result = data.toString();
       },
     },
   };
+  const exitCode = await exec(commandLine, args, options);
+  debug(result);
+  if (exitCode !== 0) {
+    throw new Error(result);
+  }
+}
 
-  const fileName = filePath.replace(".md", "");
+export async function createPullRequest(filePath: string) {
+  const fileName = filePath.replace(".", "_");
   const branchName = `zenn-metadata-updater/${fileName}`;
-  await exec("git", ["switch", "-c", branchName], options);
-  debug(result);
-  await exec("git", ["add", filePath], options);
-  debug(result);
-  await exec(
-    "git",
-    [
-      "commit",
-      "-m",
-      `"chore: update metadata ${filePath} by zenn-metadata-updater"`,
-    ],
-    options
-  );
-  debug(result);
-  await exec("git", ["add", filePath], options);
-  debug(result);
-  await exec("git", ["push", "origin", branchName], options);
-  debug(result);
+  await execByThrowError("git", ["switch", "-c", branchName]);
+  await execByThrowError("git", ["add", filePath]);
+  await execByThrowError("git", [
+    "commit",
+    "-m",
+    `"chore: update metadata ${filePath} by zenn-metadata-updater"`,
+  ]);
+  await execByThrowError("git", ["add", filePath]);
+  await execByThrowError("git", ["push", "origin", branchName]);
 }

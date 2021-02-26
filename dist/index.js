@@ -177,7 +177,7 @@ exports.saveUpdatedMarkdown = saveUpdatedMarkdown;
 //   const pushResponse = await git.push("origin", branchName, ["-f"]);
 //   debug(JSON.stringify(pushResponse, null, 2));
 // }
-function createPullRequest(filePath) {
+function execByThrowError(commandLine, args) {
     return __awaiter(this, void 0, void 0, function* () {
         let result = "";
         const options = {
@@ -186,26 +186,30 @@ function createPullRequest(filePath) {
                     result = data.toString();
                 },
                 stderr: (data) => {
-                    throw new Error(data.toString());
+                    result = data.toString();
                 },
             },
         };
-        const fileName = filePath.replace(".md", "");
+        const exitCode = yield exec_1.exec(commandLine, args, options);
+        core_1.debug(result);
+        if (exitCode !== 0) {
+            throw new Error(result);
+        }
+    });
+}
+function createPullRequest(filePath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const fileName = filePath.replace(".", "_");
         const branchName = `zenn-metadata-updater/${fileName}`;
-        yield exec_1.exec("git", ["switch", "-c", branchName], options);
-        core_1.debug(result);
-        yield exec_1.exec("git", ["add", filePath], options);
-        core_1.debug(result);
-        yield exec_1.exec("git", [
+        yield execByThrowError("git", ["switch", "-c", branchName]);
+        yield execByThrowError("git", ["add", filePath]);
+        yield execByThrowError("git", [
             "commit",
             "-m",
             `"chore: update metadata ${filePath} by zenn-metadata-updater"`,
-        ], options);
-        core_1.debug(result);
-        yield exec_1.exec("git", ["add", filePath], options);
-        core_1.debug(result);
-        yield exec_1.exec("git", ["push", "origin", branchName], options);
-        core_1.debug(result);
+        ]);
+        yield execByThrowError("git", ["add", filePath]);
+        yield execByThrowError("git", ["push", "origin", branchName]);
     });
 }
 exports.createPullRequest = createPullRequest;

@@ -23,7 +23,7 @@ const github_1 = __webpack_require__(5438);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const dryRun = core_1.getInput("dry-run");
+            const dryRun = Boolean(core_1.getInput("dry-run"));
             const inputCommitSha = core_1.getInput("commit-sha");
             const title = core_1.getInput("title");
             const emoji = core_1.getInput("emoji");
@@ -35,7 +35,6 @@ function run() {
             if (!commitSha) {
                 throw new Error("commit-sha is invalid");
             }
-            core_1.debug(`dry-run: ${dryRun}`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
             const changedFiles = yield wait_1.getChangedFiles(commitSha);
             core_1.debug(`changedFiles: ${changedFiles.toString()}`);
             const changedMarkdowns = yield wait_1.getMarkdowns(changedFiles);
@@ -44,6 +43,10 @@ function run() {
                 return;
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
+            if (dryRun) {
+                core_1.info("dry-run is true. skip after process.");
+                return;
+            }
             const zennMetaData = {
                 title: title === "" ? undefined : title,
                 emoji: emoji === "" ? undefined : emoji,

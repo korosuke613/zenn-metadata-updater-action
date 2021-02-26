@@ -11,7 +11,7 @@ import { context, getOctokit } from "@actions/github";
 
 async function run(): Promise<void> {
   try {
-    const dryRun: string = getInput("dry-run");
+    const dryRun = Boolean(getInput("dry-run"));
     const inputCommitSha = getInput("commit-sha");
     const title = getInput("title");
     const emoji = getInput("emoji");
@@ -26,8 +26,6 @@ async function run(): Promise<void> {
       throw new Error("commit-sha is invalid");
     }
 
-    debug(`dry-run: ${dryRun}`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-
     const changedFiles = await getChangedFiles(commitSha);
     debug(`changedFiles: ${changedFiles.toString()}`);
     const changedMarkdowns = await getMarkdowns(changedFiles);
@@ -37,6 +35,10 @@ async function run(): Promise<void> {
     }
     info(`changedMarkdown: ${changedMarkdowns.toString()}`);
 
+    if (dryRun) {
+      info("dry-run is true. skip after process.");
+      return;
+    }
     const zennMetaData: Partial<ZennMetadata> = {
       title: title === "" ? undefined : title,
       emoji: emoji === "" ? undefined : emoji,
@@ -50,14 +52,11 @@ async function run(): Promise<void> {
 
     for (const savedPath of savedPaths) {
       const branchName = await pushChange(savedPath, commitSha, isForcePush);
-
       const workflowBranch = process.env.GITHUB_HEAD_REF;
       if (!workflowBranch) {
         throw new Error("GITHUB_HEAD_REF is undefined");
       }
-
       const octokit = getOctokit(githubToken);
-
       await createPullRequest(
         octokit,
         context.repo,

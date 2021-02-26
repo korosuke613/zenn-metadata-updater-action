@@ -150,7 +150,6 @@ export async function createPullRequest(
       base: workflowBranch,
     });
   } catch (e) {
-    const error: Error = e;
-    console.error(JSON.stringify(e.data, null, 2));
+    throw e;
   }
 }

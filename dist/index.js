@@ -227,8 +227,7 @@ function createPullRequest(githubToken, workflowBranch, branchName) {
             });
         }
         catch (e) {
-            const error = e;
-            console.error(JSON.stringify(e.data, null, 2));
+            throw e;
         }
     });
 }

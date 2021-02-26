@@ -9,15 +9,20 @@ import {
 } from "./wait";
 import { context, getOctokit } from "@actions/github";
 
+const toBoolean = (value: string) => {
+  if (value === "true") return true;
+  else if (value === "false") return false;
+  return undefined;
+};
+
 async function run(): Promise<void> {
   try {
-    const dryRun = Boolean(getInput("dry-run"));
+    const dryRun = toBoolean(getInput("dry-run"));
     const inputCommitSha = getInput("commit-sha");
     const title = getInput("title");
     const emoji = getInput("emoji");
     const type = getInput("type");
     const published = getInput("published");
-    const isForcePush = Boolean(getInput("force-push"));
     const githubToken = getInput("github-token");
 
     const commitSha =
@@ -44,12 +49,17 @@ async function run(): Promise<void> {
       title: title === "" ? undefined : title,
       emoji: emoji === "" ? undefined : emoji,
       type: type === "" ? undefined : (type as "idea" | "tech"),
-      published: published === "" ? undefined : Boolean(published),
+      published: toBoolean(published),
     };
     const savedPaths = await saveUpdatedMarkdown(
       zennMetaData,
       changedMarkdowns
     );
+
+    const isForcePush = toBoolean(getInput("force-push"));
+    if (!isForcePush) {
+      throw new Error("force-push is invalid");
+    }
 
     for (const savedPath of savedPaths) {
       const branchName = await pushChange(savedPath, commitSha, isForcePush);

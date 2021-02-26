@@ -20,16 +20,22 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(2186);
 const wait_1 = __webpack_require__(5817);
 const github_1 = __webpack_require__(5438);
+const toBoolean = (value) => {
+    if (value === "true")
+        return true;
+    else if (value === "false")
+        return false;
+    return undefined;
+};
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const dryRun = Boolean(core_1.getInput("dry-run"));
+            const dryRun = toBoolean(core_1.getInput("dry-run"));
             const inputCommitSha = core_1.getInput("commit-sha");
             const title = core_1.getInput("title");
             const emoji = core_1.getInput("emoji");
             const type = core_1.getInput("type");
             const published = core_1.getInput("published");
-            const isForcePush = Boolean(core_1.getInput("force-push"));
             const githubToken = core_1.getInput("github-token");
             const commitSha = inputCommitSha === "" ? process.env.GITHUB_SHA : inputCommitSha;
             if (!commitSha) {
@@ -52,9 +58,13 @@ function run() {
                 title: title === "" ? undefined : title,
                 emoji: emoji === "" ? undefined : emoji,
                 type: type === "" ? undefined : type,
-                published: published === "" ? undefined : Boolean(published),
+                published: toBoolean(published),
             };
             const savedPaths = yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
+            const isForcePush = toBoolean(core_1.getInput("force-push"));
+            if (!isForcePush) {
+                throw new Error("force-push is invalid");
+            }
             for (const savedPath of savedPaths) {
                 const branchName = yield wait_1.pushChange(savedPath, commitSha, isForcePush);
                 const workflowBranch = process.env.GITHUB_HEAD_REF;

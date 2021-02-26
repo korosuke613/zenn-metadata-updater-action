@@ -12,7 +12,7 @@
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
     "test:ci": "jest --ci --runInBand",
-    "ci": "npm-run-all -s build -p test:ci lint",
+    "check": "npm-run-all -s build -p test:ci lint",
     "prepublish": "npm run test && npm run build && npm run package"
   },
   "repository": {

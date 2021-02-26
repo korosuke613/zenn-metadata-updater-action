@@ -218,13 +218,7 @@ function createPullRequest(githubToken, workflowBranch, branchName) {
         const githubContext = github_1.context;
         const octokit = github_1.getOctokit(githubToken);
         try {
-            yield octokit.pulls.create({
-                owner: "aaa",
-                repo: "sss",
-                title: `chore: update matadata ${branchName} by zenn-metadata-updater`,
-                head: branchName,
-                base: workflowBranch,
-            });
+            yield octokit.pulls.create(Object.assign(Object.assign({}, githubContext.repo), { title: `chore: update matadata ${branchName} by zenn-metadata-updater`, head: branchName, base: workflowBranch }));
         }
         catch (e) {
             core_1.debug(e);

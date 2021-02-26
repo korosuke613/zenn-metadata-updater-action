@@ -143,8 +143,7 @@ export async function createPullRequest(
 
   try {
     await octokit.pulls.create({
-      owner: "aaa",
-      repo: "sss",
+      ...githubContext.repo,
       title: `chore: update matadata ${branchName} by zenn-metadata-updater`,
       head: branchName,
       base: workflowBranch,

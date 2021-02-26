@@ -96,3 +96,5 @@ Thumbs.db
 
 # Ignore built ts files
 lib/**/*
+reports/
+*.md.generated.md

@@ -110,7 +110,11 @@ async function execByThrowError(commandLine: string, args?: string[]) {
   }
 }
 
-export async function pushChange(filePath: string, isForcePush: boolean) {
+export async function pushChange(
+  filePath: string,
+  originalBranch: string,
+  isForcePush: boolean
+) {
   const fileName = filePath.replace(".", "_");
   const branchName = `zenn-metadata-updater/${fileName}`;
   let forceFlag: "" | "-f" = "";
@@ -131,6 +135,7 @@ export async function pushChange(filePath: string, isForcePush: boolean) {
   ]);
   await execByThrowError("git", ["add", filePath]);
   await execByThrowError("git", ["push", forceFlag, "origin", branchName]);
+  await execByThrowError("git", ["switch", originalBranch]);
 
   return branchName;
 }
@@ -138,7 +143,6 @@ export async function pushChange(filePath: string, isForcePush: boolean) {
 export async function createPullRequest(
   octokit: ReturnType<typeof getOctokit>,
   githubRepo: { owner: string; repo: string },
-  //githubContext: Context,
   workflowBranch: string,
   branchName: string
 ) {

@@ -51,12 +51,17 @@ async function run(): Promise<void> {
     );
 
     for (const savedPath of savedPaths) {
-      const branchName = await pushChange(savedPath, isForcePush);
-
       const workflowBranch = process.env.GITHUB_HEAD_REF;
       if (!workflowBranch) {
         throw new Error("GITHUB_HEAD_REF is undefined");
       }
+
+      const branchName = await pushChange(
+        savedPath,
+        workflowBranch,
+        isForcePush
+      );
+
       const octokit = getOctokit(githubToken);
 
       await createPullRequest(

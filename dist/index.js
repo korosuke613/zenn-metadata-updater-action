@@ -53,11 +53,11 @@ function run() {
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
             const savedPaths = yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
             for (const savedPath of savedPaths) {
-                const branchName = yield wait_1.pushChange(savedPath, isForcePush);
                 const workflowBranch = process.env.GITHUB_HEAD_REF;
                 if (!workflowBranch) {
                     throw new Error("GITHUB_HEAD_REF is undefined");
                 }
+                const branchName = yield wait_1.pushChange(savedPath, workflowBranch, isForcePush);
                 const octokit = github_1.getOctokit(githubToken);
                 yield wait_1.createPullRequest(octokit, github_1.context.repo, workflowBranch, branchName);
             }
@@ -189,7 +189,7 @@ function execByThrowError(commandLine, args) {
         }
     });
 }
-function pushChange(filePath, isForcePush) {
+function pushChange(filePath, originalBranch, isForcePush) {
     return __awaiter(this, void 0, void 0, function* () {
         const fileName = filePath.replace(".", "_");
         const branchName = `zenn-metadata-updater/${fileName}`;
@@ -210,13 +210,12 @@ function pushChange(filePath, isForcePush) {
         ]);
         yield execByThrowError("git", ["add", filePath]);
         yield execByThrowError("git", ["push", forceFlag, "origin", branchName]);
+        yield execByThrowError("git", ["switch", originalBranch]);
         return branchName;
     });
 }
 exports.pushChange = pushChange;
-function createPullRequest(octokit, githubRepo, 
-//githubContext: Context,
-workflowBranch, branchName) {
+function createPullRequest(octokit, githubRepo, workflowBranch, branchName) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield octokit.pulls.create(Object.assign(Object.assign({}, githubRepo), { title: `chore: update matadata ${branchName} by zenn-metadata-updater`, head: branchName, base: workflowBranch }));

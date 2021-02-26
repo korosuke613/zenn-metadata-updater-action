@@ -229,7 +229,7 @@ function createPullRequest(githubToken, workflowBranch, branchName) {
     return __awaiter(this, void 0, void 0, function* () {
         const githubContext = github_1.context;
         const octokit = github_1.getOctokit(githubToken);
-        yield octokit.pulls.create(Object.assign(Object.assign({}, githubContext.repo), { head: branchName, base: workflowBranch }));
+        yield octokit.pulls.create(Object.assign(Object.assign({}, githubContext.repo), { title: `chore: update matadata ${branchName} by zenn-metadata-updater`, head: branchName, base: workflowBranch }));
     });
 }
 exports.createPullRequest = createPullRequest;

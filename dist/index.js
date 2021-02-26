@@ -193,7 +193,7 @@ function execByThrowError(commandLine, args) {
         }
     });
 }
-function pushChange(filePath, originalBranch, isForcePush) {
+function pushChange(filePath, originalBranchSha, isForcePush) {
     return __awaiter(this, void 0, void 0, function* () {
         const fileName = filePath.replace(".", "_");
         const branchName = `zenn-metadata-updater/${fileName}`;
@@ -214,7 +214,7 @@ function pushChange(filePath, originalBranch, isForcePush) {
         ]);
         yield execByThrowError("git", ["add", filePath]);
         yield execByThrowError("git", ["push", forceFlag, "origin", branchName]);
-        yield execByThrowError("git", ["switch", "-"]);
+        yield execByThrowError("git", ["checkout", originalBranchSha]);
         return branchName;
     });
 }

@@ -112,7 +112,7 @@ async function execByThrowError(commandLine: string, args?: string[]) {
 
 export async function pushChange(
   filePath: string,
-  originalBranch: string,
+  originalBranchSha: string,
   isForcePush: boolean
 ) {
   const fileName = filePath.replace(".", "_");
@@ -135,7 +135,7 @@ export async function pushChange(
   ]);
   await execByThrowError("git", ["add", filePath]);
   await execByThrowError("git", ["push", forceFlag, "origin", branchName]);
-  await execByThrowError("git", ["switch", "-"]);
+  await execByThrowError("git", ["checkout", originalBranchSha]);
 
   return branchName;
 }

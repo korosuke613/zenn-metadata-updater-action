@@ -47,7 +47,10 @@ async function run(): Promise<void> {
 
     await saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
 
-    const git = simpleGit();
+    const git = simpleGit({
+      config: ["user.name='Some One'", "user.email='some@one.com'"],
+    });
+
     await createPullRequest(git, changedMarkdowns[0]);
   } catch (error) {
     setFailed(error.message);

@@ -1,5 +1,8 @@
 name: 'Zenn Metadata Updater'
 description: 'Update Zenn article metadata and create a pull request.'
+branding:
+  icon: refresh-cw
+  color: blue
 author: 'Futa Hirakoba <futa-hirakoba@cybozu.co.jp>'
 inputs:
   github-token:

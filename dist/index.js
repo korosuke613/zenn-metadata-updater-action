@@ -2,90 +2,7 @@ require('./sourcemap-register.js');module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 3109:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __webpack_require__(2186);
-const wait_1 = __webpack_require__(5817);
-const github_1 = __webpack_require__(5438);
-const toBoolean = (value) => {
-    if (value === "true")
-        return true;
-    else if (value === "false")
-        return false;
-    return undefined;
-};
-function run() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const dryRun = toBoolean(core_1.getInput("dry-run"));
-            const inputCommitSha = core_1.getInput("commit-sha");
-            const title = core_1.getInput("title");
-            const emoji = core_1.getInput("emoji");
-            const type = core_1.getInput("type");
-            const published = core_1.getInput("published");
-            const githubToken = core_1.getInput("github-token");
-            const commitSha = inputCommitSha === "" ? process.env.GITHUB_SHA : inputCommitSha;
-            if (!commitSha) {
-                throw new Error("commit-sha is invalid");
-            }
-            const changedFiles = yield wait_1.getChangedFiles(commitSha);
-            core_1.debug(`changedFiles: ${changedFiles.toString()}`);
-            const changedMarkdowns = yield wait_1.getMarkdowns(changedFiles);
-            if (changedMarkdowns.length === 0) {
-                core_1.info("Markdown files is no changed.");
-                return;
-            }
-            core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
-            core_1.debug(String(dryRun));
-            if (dryRun) {
-                core_1.info("dry-run is true. skip after process.");
-                return;
-            }
-            const zennMetaData = {
-                title: title === "" ? undefined : title,
-                emoji: emoji === "" ? undefined : emoji,
-                type: type === "" ? undefined : type,
-                published: toBoolean(published),
-            };
-            const savedPaths = yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
-            const isForcePush = toBoolean(core_1.getInput("force-push"));
-            if (!isForcePush) {
-                throw new Error("force-push is invalid");
-            }
-            for (const savedPath of savedPaths) {
-                const branchName = yield wait_1.pushChange(savedPath, commitSha, isForcePush);
-                const workflowBranch = process.env.GITHUB_HEAD_REF;
-                if (!workflowBranch) {
-                    throw new Error("GITHUB_HEAD_REF is undefined");
-                }
-                const octokit = github_1.getOctokit(githubToken);
-                yield wait_1.createPullRequest(octokit, github_1.context.repo, savedPath, workflowBranch, branchName);
-            }
-        }
-        catch (error) {
-            core_1.setFailed(error.message);
-        }
-    });
-}
-run();
-
-
-/***/ }),
-
-/***/ 5817:
+/***/ 358:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -247,6 +164,91 @@ function createPullRequest(octokit, githubRepo, savedPath, workflowBranch, branc
     });
 }
 exports.createPullRequest = createPullRequest;
+
+
+/***/ }),
+
+/***/ 3109:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core_1 = __webpack_require__(2186);
+const functions_1 = __webpack_require__(358);
+const github_1 = __webpack_require__(5438);
+const toBoolean = (value) => {
+    if (value === "true")
+        return true;
+    else if (value === "false")
+        return false;
+    return undefined;
+};
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const dryRun = toBoolean(core_1.getInput("dry-run"));
+            const inputCommitSha = core_1.getInput("commit-sha");
+            const title = core_1.getInput("title");
+            const emoji = core_1.getInput("emoji");
+            const type = core_1.getInput("type");
+            const published = core_1.getInput("published");
+            const githubToken = core_1.getInput("github-token");
+            const commitSha = inputCommitSha === "" ? process.env.GITHUB_SHA : inputCommitSha;
+            if (!commitSha) {
+                throw new Error("commit-sha is invalid");
+            }
+            const isForcePush = toBoolean(core_1.getInput("force-push"));
+            if (!isForcePush) {
+                throw new Error("force-push is invalid");
+            }
+            // 変更されたマークダウンの取得とパラメータのアップデート
+            const changedFiles = yield functions_1.getChangedFiles(commitSha);
+            core_1.debug(`changedFiles: ${changedFiles.toString()}`);
+            const changedMarkdowns = yield functions_1.getMarkdowns(changedFiles);
+            if (changedMarkdowns.length === 0) {
+                core_1.info("Markdown files is no changed.");
+                return;
+            }
+            core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
+            // マークダウンの保存とプッシュとプルリクエスト作成
+            const zennMetaData = {
+                title: title === "" ? undefined : title,
+                emoji: emoji === "" ? undefined : emoji,
+                type: type === "" ? undefined : type,
+                published: toBoolean(published),
+            };
+            const savedPaths = yield functions_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
+            // dry-run = true の場合はプッシュ、プルリクエストの作成をスキップする
+            if (dryRun) {
+                core_1.info("dry-run is true. skip after process.");
+                return;
+            }
+            for (const savedPath of savedPaths) {
+                const branchName = yield functions_1.pushChange(savedPath, commitSha, isForcePush);
+                const workflowBranch = process.env.GITHUB_HEAD_REF;
+                if (!workflowBranch) {
+                    throw new Error("GITHUB_HEAD_REF is undefined");
+                }
+                const octokit = github_1.getOctokit(githubToken);
+                yield functions_1.createPullRequest(octokit, github_1.context.repo, savedPath, workflowBranch, branchName);
+            }
+        }
+        catch (error) {
+            core_1.setFailed(error.message);
+        }
+    });
+}
+run();
 
 
 /***/ }),

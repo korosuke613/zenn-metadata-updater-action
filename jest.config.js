@@ -3,7 +3,6 @@ module.exports = {
   moduleFileExtensions: ["js", "ts"],
   testEnvironment: "node",
   testMatch: ["**/*.test.ts"],
-  testRunner: "jest-circus/runner",
   transform: {
     "^.+\\.ts$": "ts-jest",
   },
@@ -14,8 +13,8 @@ module.exports = {
       "jest-junit",
       {
         suiteName: "jest tests",
-        outputDirectory: "reports/jest",
-        outputName: "js-test-results.xml",
+        outputDirectory: "reports",
+        outputName: "jest.xml",
         classNameTemplate: "{classname}-{title}",
         titleTemplate: "{classname}-{title}",
         ancestorSeparator: " › ",

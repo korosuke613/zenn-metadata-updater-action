@@ -62,19 +62,14 @@ async function run(): Promise<void> {
         isForcePush
       );
 
-      const workflowBranch = process.env.GITHUB_HEAD_REF;
-      if (!workflowBranch) {
+      const workflowRef = process.env.GITHUB_REF;
+      if (!workflowRef) {
         throw new Error("GITHUB_HEAD_REF is undefined");
       }
 
       const octokit = getOctokit(githubToken);
 
-      await createPullRequest(
-        octokit,
-        context.repo,
-        workflowBranch,
-        branchName
-      );
+      await createPullRequest(octokit, context.repo, workflowRef, branchName);
     }
   } catch (error) {
     setFailed(error.message);

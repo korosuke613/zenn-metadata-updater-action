@@ -58,12 +58,12 @@ function run() {
             }
             for (const savedPath of savedPaths) {
                 const branchName = yield wait_1.pushChange(savedPath, workflowBaseRef, isForcePush);
-                const workflowBranch = process.env.GITHUB_HEAD_REF;
-                if (!workflowBranch) {
+                const workflowRef = process.env.GITHUB_REF;
+                if (!workflowRef) {
                     throw new Error("GITHUB_HEAD_REF is undefined");
                 }
                 const octokit = github_1.getOctokit(githubToken);
-                yield wait_1.createPullRequest(octokit, github_1.context.repo, workflowBranch, branchName);
+                yield wait_1.createPullRequest(octokit, github_1.context.repo, workflowRef, branchName);
             }
         }
         catch (error) {

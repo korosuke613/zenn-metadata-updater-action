@@ -2,10 +2,33 @@ name: 'Your name here'
 description: 'Provide a description here'
 author: 'Your name or organization here'
 inputs:
-  milliseconds: # change this
+  github-token:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'Title of Zenn article'
+  dry-run: # change this
+    required: false
+    description: 'true or false (default: false)'
+    default: "false"
+  title:
+    required: false
+    description: 'Title of Zenn article'
+  emoji:
+    required: false
+    description: 'Emoji of Zenn article'
+  type:
+    required: false
+    description: 'Type of Zenn article'
+  topics:
+    required: false
+    description: 'Topics of Zenn article'
+  published:
+    required: false
+    description: 'Title of Zenn article'
+    default: "true"
+  force-push:
+    required: false
+    description: 'Title of Zenn article'
+    default: "false"
 runs:
   using: 'node12'
   main: 'dist/index.js'

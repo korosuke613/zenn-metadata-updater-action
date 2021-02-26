@@ -150,6 +150,7 @@ export async function createPullRequest(
       base: workflowBranch,
     });
   } catch (e) {
+    debug(e);
     throw e;
   }
 }

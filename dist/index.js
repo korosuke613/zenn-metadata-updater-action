@@ -227,6 +227,7 @@ function createPullRequest(githubToken, workflowBranch, branchName) {
             });
         }
         catch (e) {
+            core_1.debug(e);
             throw e;
         }
     });

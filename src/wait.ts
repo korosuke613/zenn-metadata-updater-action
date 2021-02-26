@@ -141,10 +141,14 @@ export async function createPullRequest(
   const githubContext = context;
   const octokit = getOctokit(githubToken);
 
-  await octokit.pulls.create({
-    ...githubContext.repo,
-    title: `chore: update matadata ${branchName} by zenn-metadata-updater`,
-    head: branchName,
-    base: workflowBranch,
-  });
+  try {
+    await octokit.pulls.create({
+      ...githubContext.repo,
+      title: `chore: update matadata ${branchName} by zenn-metadata-updater`,
+      head: branchName,
+      base: workflowBranch,
+    });
+  } catch (e) {
+    console.error(JSON.stringify(e, null, 2));
+  }
 }

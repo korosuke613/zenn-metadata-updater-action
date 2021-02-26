@@ -50,7 +50,7 @@ async function run(): Promise<void> {
     const git = simpleGit()
       .addConfig("user.name", "Some One")
       .addConfig("user.email", "some@one.com");
-
+    await git;
     await createPullRequest(git, changedMarkdowns[0]);
   } catch (error) {
     setFailed(error.message);

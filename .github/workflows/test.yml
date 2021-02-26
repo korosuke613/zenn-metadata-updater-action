@@ -14,7 +14,11 @@ jobs:
       - run: |
           npm install
       - run: |
-          npm run all
+          npm run ci
+      - uses: mikepenz/action-junit-report@v2
+        with:
+          report_paths: '**/report/jest/js-test-*.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:

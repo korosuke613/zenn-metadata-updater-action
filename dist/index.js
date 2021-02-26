@@ -53,8 +53,11 @@ function run() {
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
             yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
-            const git = simple_git_1.default();
-            yield wait_1.createPullRequest(git, changedMarkdowns[0]);
+            const git = simple_git_1.default()
+                .addConfig("user.name", "Some One")
+                .addConfig("user.email", "some@one.com");
+            yield git;
+            yield wait_1.createPullRequest(changedMarkdowns[0]);
         }
         catch (error) {
             core_1.setFailed(error.message);
@@ -160,18 +163,48 @@ function saveUpdatedMarkdown(zennMetaData, changedMarkdowns, postPath = "") {
     });
 }
 exports.saveUpdatedMarkdown = saveUpdatedMarkdown;
-function createPullRequest(git, filePath) {
+// export async function createPullRequest(git: SimpleGit, filePath: string) {
+//   const branchName = `zenn-metadata-updater/${filePath}`;
+//   await git.checkoutLocalBranch(branchName);
+//   const statusResponse = await git.status();
+//   debug(statusResponse.modified.toString());
+//   const addResponse = await git.add(filePath);
+//   debug(addResponse);
+//   const commitResponse = await git.commit(
+//     `chore: update metadata ${filePath} by zenn-metadata-updater`
+//   );
+//   debug(JSON.stringify(commitResponse, null, 2));
+//   const pushResponse = await git.push("origin", branchName, ["-f"]);
+//   debug(JSON.stringify(pushResponse, null, 2));
+// }
+function createPullRequest(filePath) {
     return __awaiter(this, void 0, void 0, function* () {
+        let result = "";
+        const options = {
+            listeners: {
+                stdout: (data) => {
+                    result = data.toString();
+                },
+                stderr: (data) => {
+                    throw new Error(data.toString());
+                },
+            },
+        };
         const branchName = `zenn-metadata-updater/${filePath}`;
-        yield git.checkoutLocalBranch(branchName);
-        const statusResponse = yield git.status();
-        core_1.debug(statusResponse.modified.toString());
-        const addResponse = yield git.add(filePath);
-        core_1.debug(addResponse);
-        const commitResponse = yield git.commit(`chore: update metadata ${filePath} by zenn-metadata-updater`);
-        core_1.debug(JSON.stringify(commitResponse, null, 2));
-        const pushResponse = yield git.push("origin", branchName, ["-f"]);
-        core_1.debug(JSON.stringify(pushResponse, null, 2));
+        yield exec_1.exec("git", ["switch", "-c", branchName], options);
+        core_1.debug(result);
+        yield exec_1.exec("git", ["add", filePath], options);
+        core_1.debug(result);
+        yield exec_1.exec("git", [
+            "commit",
+            "-m",
+            `"chore: update metadata ${filePath} by zenn-metadata-updater"`,
+        ], options);
+        core_1.debug(result);
+        yield exec_1.exec("git", ["add", filePath], options);
+        core_1.debug(result);
+        yield exec_1.exec("git", ["push", "origin", branchName], options);
+        core_1.debug(result);
     });
 }
 exports.createPullRequest = createPullRequest;

@@ -51,7 +51,7 @@ async function run(): Promise<void> {
       .addConfig("user.name", "Some One")
       .addConfig("user.email", "some@one.com");
     await git;
-    await createPullRequest(git, changedMarkdowns[0]);
+    await createPullRequest(changedMarkdowns[0]);
   } catch (error) {
     setFailed(error.message);
   }

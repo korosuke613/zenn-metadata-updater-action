@@ -85,17 +85,51 @@ export async function saveUpdatedMarkdown(
   }
 }
 
-export async function createPullRequest(git: SimpleGit, filePath: string) {
+// export async function createPullRequest(git: SimpleGit, filePath: string) {
+//   const branchName = `zenn-metadata-updater/${filePath}`;
+//   await git.checkoutLocalBranch(branchName);
+//   const statusResponse = await git.status();
+//   debug(statusResponse.modified.toString());
+//   const addResponse = await git.add(filePath);
+//   debug(addResponse);
+//   const commitResponse = await git.commit(
+//     `chore: update metadata ${filePath} by zenn-metadata-updater`
+//   );
+//   debug(JSON.stringify(commitResponse, null, 2));
+//   const pushResponse = await git.push("origin", branchName, ["-f"]);
+//   debug(JSON.stringify(pushResponse, null, 2));
+// }
+
+export async function createPullRequest(filePath: string) {
+  let result = "";
+  const options = {
+    listeners: {
+      stdout: (data: Buffer) => {
+        result = data.toString();
+      },
+      stderr: (data: Buffer) => {
+        throw new Error(data.toString());
+      },
+    },
+  };
+
   const branchName = `zenn-metadata-updater/${filePath}`;
-  await git.checkoutLocalBranch(branchName);
-  const statusResponse = await git.status();
-  debug(statusResponse.modified.toString());
-  const addResponse = await git.add(filePath);
-  debug(addResponse);
-  const commitResponse = await git.commit(
-    `chore: update metadata ${filePath} by zenn-metadata-updater`
+  await exec("git", ["switch", "-c", branchName], options);
+  debug(result);
+  await exec("git", ["add", filePath], options);
+  debug(result);
+  await exec(
+    "git",
+    [
+      "commit",
+      "-m",
+      `"chore: update metadata ${filePath} by zenn-metadata-updater"`,
+    ],
+    options
   );
-  debug(JSON.stringify(commitResponse, null, 2));
-  const pushResponse = await git.push("origin", branchName, ["-f"]);
-  debug(JSON.stringify(pushResponse, null, 2));
+  debug(result);
+  await exec("git", ["add", filePath], options);
+  debug(result);
+  await exec("git", ["push", "origin", branchName], options);
+  debug(result);
 }

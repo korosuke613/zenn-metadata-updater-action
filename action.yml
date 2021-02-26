@@ -2,10 +2,27 @@ name: 'Your name here'
 description: 'Provide a description here'
 author: 'Your name or organization here'
 inputs:
-  milliseconds: # change this
+  dry-run: # change this
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'true or false (default: false)'
+    default: "false"
+  title:
+    required: false
+    description: 'Title of Zenn article'
+  emoji:
+    required: false
+    description: 'Emoji of Zenn article'
+  type:
+    required: false
+    description: 'Type of Zenn article'
+  topics:
+    required: false
+    description: 'Topics of Zenn article'
+  published:
+    required: false
+    description: 'Title of Zenn article'
+    default: "true"
+
 runs:
   using: 'node12'
   main: 'dist/index.js'

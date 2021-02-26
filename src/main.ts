@@ -1,19 +1,51 @@
-import * as core from '@actions/core'
-import {wait} from './wait'
+import { getInput, debug, setOutput, setFailed, info } from "@actions/core";
+import { NotEnoughPropertyError, ZennMetadata } from "zenn-metadata-updater";
+import {
+  getChangedFiles,
+  getMarkdowns,
+  saveUpdatedMarkdown,
+  updateMarkdown,
+} from "./wait";
+import { readFileSync } from "fs";
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    const dryRun: string = getInput("dry-run");
+    const inputCommitSha = getInput("commit-sha");
+    const title = getInput("title");
+    const emoji = getInput("emoji");
+    const type = getInput("type");
+    const published = getInput("published");
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const zennMetaData: Partial<ZennMetadata> = {
+      title: title === "" ? undefined : title,
+      emoji: emoji === "" ? undefined : emoji,
+      type: type === "" ? undefined : (type as "idea" | "tech"),
+      published: published === "" ? undefined : Boolean(published),
+    };
 
-    core.setOutput('time', new Date().toTimeString())
+    const commitSha = inputCommitSha === "" ? "." : inputCommitSha;
+
+    debug(`dry-run: ${dryRun}`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    debug(`COMMIT_SHA: ${commitSha}`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+
+    if (commitSha === undefined || commitSha === "") {
+      throw new Error("GITHUB_SHA is undefined or null");
+    }
+
+    const changedFiles = await getChangedFiles(commitSha);
+    debug(`changedFiles: ${changedFiles.toString()}`);
+    const changedMarkdowns = await getMarkdowns(changedFiles);
+    if (changedMarkdowns.length === 0) {
+      info("Markdown files is no changed.");
+      return;
+    }
+    info(`changedMarkdown: ${changedMarkdowns.toString()}`);
+
+    await saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
   } catch (error) {
-    core.setFailed(error.message)
+    setFailed(error.message);
   }
 }
 
-run()
+run();

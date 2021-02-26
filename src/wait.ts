@@ -88,9 +88,14 @@ export async function saveUpdatedMarkdown(
 export async function createPullRequest(git: SimpleGit, filePath: string) {
   const branchName = `zenn-metadata-updater/${filePath}`;
   await git.checkoutLocalBranch(branchName);
-  await git.add(filePath);
-  await git.commit(
+  const statusResponse = await git.status();
+  debug(statusResponse.modified.toString());
+  const addResponse = await git.add(filePath);
+  debug(addResponse);
+  const commitResponse = await git.commit(
     `chore: update metadata ${filePath} by zenn-metadata-updater`
   );
-  await git.push("origin", branchName, ["-f"]);
+  debug(JSON.stringify(commitResponse, null, 2));
+  const pushResponse = await git.push("origin", branchName, ["-f"]);
+  debug(JSON.stringify(pushResponse, null, 2));
 }

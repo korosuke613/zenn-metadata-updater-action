@@ -19,7 +19,7 @@ jobs:
           path: "test"
       - run: |
           cd test
-          npm --prefix $GITHUB_WORKSPACE run ci
+          npm --prefix $GITHUB_WORKSPACE run test:ci
       - name: upload test report
         if: ${{ always() }}
         uses: mikepenz/action-junit-report@v2

@@ -15,7 +15,9 @@ jobs:
           npm install
       - run: |
           npm run ci
-      - uses: mikepenz/action-junit-report@v2
+      - name: upload test report
+        if: ${{ always() }}
+        uses: mikepenz/action-junit-report@v2
         with:
           report_paths: '**/report/jest/js-test-*.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}

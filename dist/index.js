@@ -43,6 +43,7 @@ function run() {
                 return;
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
+            core_1.debug(String(dryRun));
             if (dryRun) {
                 core_1.info("dry-run is true. skip after process.");
                 return;

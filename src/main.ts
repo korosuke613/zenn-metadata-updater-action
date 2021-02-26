@@ -35,6 +35,7 @@ async function run(): Promise<void> {
     }
     info(`changedMarkdown: ${changedMarkdowns.toString()}`);
 
+    debug(String(dryRun));
     if (dryRun) {
       info("dry-run is true. skip after process.");
       return;

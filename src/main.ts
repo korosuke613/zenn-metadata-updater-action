@@ -4,6 +4,7 @@ import {
   createPullRequest,
   getChangedFiles,
   getMarkdowns,
+  pushChange,
   saveUpdatedMarkdown,
   updateMarkdown,
 } from "./wait";
@@ -20,6 +21,7 @@ async function run(): Promise<void> {
     const type = getInput("type");
     const published = getInput("published");
     const isForcePush = Boolean(getInput("force-push"));
+    const githubToken = getInput("github-token");
 
     const zennMetaData: Partial<ZennMetadata> = {
       title: title === "" ? undefined : title,
@@ -51,11 +53,13 @@ async function run(): Promise<void> {
       changedMarkdowns
     );
 
-    const git = simpleGit()
-      .addConfig("user.name", "Some One")
-      .addConfig("user.email", "some@one.com");
-    await git;
-    await createPullRequest(savedPaths[0], isForcePush);
+    const branchName = await pushChange(savedPaths[0], isForcePush);
+
+    const workflowBranch = process.env.GITHUB_HEAD_REF;
+    if (!workflowBranch) {
+      throw new Error("GITHUB_HEAD_REF is undefined");
+    }
+    await createPullRequest(githubToken, workflowBranch, branchName);
   } catch (error) {
     setFailed(error.message);
   }

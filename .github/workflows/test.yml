@@ -31,3 +31,4 @@ jobs:
         with:
           published: true
           force-push: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}

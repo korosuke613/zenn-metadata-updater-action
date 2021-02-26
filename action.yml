@@ -2,8 +2,11 @@ name: 'Your name here'
 description: 'Provide a description here'
 author: 'Your name or organization here'
 inputs:
-  dry-run: # change this
+  github-token:
     required: true
+    description: 'Title of Zenn article'
+  dry-run: # change this
+    required: false
     description: 'true or false (default: false)'
     default: "false"
   title:

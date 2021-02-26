@@ -6,7 +6,7 @@ import {
 } from "zenn-metadata-updater";
 import { debug, info } from "@actions/core";
 import { readFileSync, writeFileSync } from "fs";
-import { SimpleGit } from "simple-git";
+import { getOctokit, context } from "@actions/github";
 
 export async function getChangedFiles(githubSha: string): Promise<string[]> {
   let changedFiles: string[] = [];
@@ -123,10 +123,7 @@ async function execByThrowError(commandLine: string, args?: string[]) {
   }
 }
 
-export async function createPullRequest(
-  filePath: string,
-  isForcePush: boolean
-) {
+export async function pushChange(filePath: string, isForcePush: boolean) {
   const fileName = filePath.replace(".", "_");
   const branchName = `zenn-metadata-updater/${fileName}`;
   let forceFlag: "" | "-f" = "";
@@ -138,13 +135,29 @@ export async function createPullRequest(
   await execByThrowError("git", ["add", filePath]);
   await execByThrowError("git", [
     "-c",
-    "user.name='41898282+github-actions[bot]@users.noreply.github.com'",
+    "user.email='41898282+github-actions[bot]@users.noreply.github.com'",
     "-c",
-    "user.email='github-actions[bot]'",
+    "user.name='github-actions[bot]'",
     "commit",
     "-m",
-    `"chore: update metadata ${filePath} by zenn-metadata-updater"`,
+    `chore: update metadata ${filePath} by zenn-metadata-updater`,
   ]);
   await execByThrowError("git", ["add", filePath]);
   await execByThrowError("git", ["push", forceFlag, "origin", branchName]);
+
+  return branchName;
+}
+
+export async function createPullRequest(
+  githubToken: string,
+  workflowBranch: string,
+  branchName: string
+) {
+  const githubContext = context;
+  const octokit = getOctokit(githubToken);
+  await octokit.pulls.create({
+    ...githubContext.repo,
+    head: branchName,
+    base: workflowBranch,
+  });
 }

@@ -129,6 +129,10 @@ export async function createPullRequest(filePath: string) {
   await execByThrowError("git", ["switch", "-c", branchName]);
   await execByThrowError("git", ["add", filePath]);
   await execByThrowError("git", [
+    "-c",
+    "user.name='41898282+github-actions[bot]@users.noreply.github.com'",
+    "-c",
+    "user.email='github-actions[bot]'",
     "commit",
     "-m",
     `"chore: update metadata ${filePath} by zenn-metadata-updater"`,

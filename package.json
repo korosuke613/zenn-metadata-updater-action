@@ -13,7 +13,7 @@
     "test": "jest",
     "test:ci": "jest --ci --runInBand",
     "check": "npm-run-all -s build -p test:ci lint",
-    "prerelease": "npm-run-all -s build -p test package"
+    "prerelease": "npm-run-all  -p test build -s package"
   },
   "repository": {
     "type": "git",

@@ -155,7 +155,8 @@ function createPullRequest(octokit, githubRepo, savedPath, workflowBranch, branc
         }
         catch (e) {
             const errorMessage = e.errors[0].message;
-            if (errorMessage.startsWith("A pull request already exists for")) {
+            if (errorMessage.startsWith !== undefined &&
+                errorMessage.startsWith("A pull request already exists for")) {
                 core_1.info(`skip because ${errorMessage}`);
                 return;
             }

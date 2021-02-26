@@ -52,12 +52,16 @@ function run() {
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
             const savedPaths = yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
+            const workflowSha = process.env.GITHUB_SHA;
+            if (!workflowSha) {
+                throw new Error("GITHUB_SHA is undefined");
+            }
             for (const savedPath of savedPaths) {
+                const branchName = yield wait_1.pushChange(savedPath, workflowSha, isForcePush);
                 const workflowBranch = process.env.GITHUB_HEAD_REF;
                 if (!workflowBranch) {
                     throw new Error("GITHUB_HEAD_REF is undefined");
                 }
-                const branchName = yield wait_1.pushChange(savedPath, workflowBranch, isForcePush);
                 const octokit = github_1.getOctokit(githubToken);
                 yield wait_1.createPullRequest(octokit, github_1.context.repo, workflowBranch, branchName);
             }

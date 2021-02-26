@@ -50,17 +50,18 @@ async function run(): Promise<void> {
       changedMarkdowns
     );
 
+    const workflowSha = process.env.GITHUB_SHA;
+    if (!workflowSha) {
+      throw new Error("GITHUB_SHA is undefined");
+    }
+
     for (const savedPath of savedPaths) {
+      const branchName = await pushChange(savedPath, workflowSha, isForcePush);
+
       const workflowBranch = process.env.GITHUB_HEAD_REF;
       if (!workflowBranch) {
         throw new Error("GITHUB_HEAD_REF is undefined");
       }
-
-      const branchName = await pushChange(
-        savedPath,
-        workflowBranch,
-        isForcePush
-      );
 
       const octokit = getOctokit(githubToken);
 

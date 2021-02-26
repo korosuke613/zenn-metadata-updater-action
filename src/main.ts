@@ -1,16 +1,12 @@
-import { getInput, debug, setOutput, setFailed, info } from "@actions/core";
-import { NotEnoughPropertyError, ZennMetadata } from "zenn-metadata-updater";
+import { getInput, debug, setFailed, info } from "@actions/core";
+import { ZennMetadata } from "zenn-metadata-updater";
 import {
   createPullRequest,
   getChangedFiles,
   getMarkdowns,
   pushChange,
   saveUpdatedMarkdown,
-  updateMarkdown,
 } from "./wait";
-import { readFileSync } from "fs";
-import { exec } from "@actions/exec";
-import simpleGit from "simple-git";
 
 async function run(): Promise<void> {
   try {
@@ -53,13 +49,15 @@ async function run(): Promise<void> {
       changedMarkdowns
     );
 
-    const branchName = await pushChange(savedPaths[0], isForcePush);
+    for (const savedPath of savedPaths) {
+      const branchName = await pushChange(savedPath, isForcePush);
 
-    const workflowBranch = process.env.GITHUB_HEAD_REF;
-    if (!workflowBranch) {
-      throw new Error("GITHUB_HEAD_REF is undefined");
+      const workflowBranch = process.env.GITHUB_HEAD_REF;
+      if (!workflowBranch) {
+        throw new Error("GITHUB_HEAD_REF is undefined");
+      }
+      await createPullRequest(githubToken, workflowBranch, branchName);
     }
-    await createPullRequest(githubToken, workflowBranch, branchName);
   } catch (error) {
     setFailed(error.message);
   }

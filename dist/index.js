@@ -51,12 +51,14 @@ function run() {
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
             const savedPaths = yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
-            const branchName = yield wait_1.pushChange(savedPaths[0], isForcePush);
-            const workflowBranch = process.env.GITHUB_HEAD_REF;
-            if (!workflowBranch) {
-                throw new Error("GITHUB_HEAD_REF is undefined");
+            for (const savedPath of savedPaths) {
+                const branchName = yield wait_1.pushChange(savedPath, isForcePush);
+                const workflowBranch = process.env.GITHUB_HEAD_REF;
+                if (!workflowBranch) {
+                    throw new Error("GITHUB_HEAD_REF is undefined");
+                }
+                yield wait_1.createPullRequest(githubToken, workflowBranch, branchName);
             }
-            yield wait_1.createPullRequest(githubToken, workflowBranch, branchName);
         }
         catch (error) {
             core_1.setFailed(error.message);
@@ -166,20 +168,6 @@ function saveUpdatedMarkdown(zennMetaData, changedMarkdowns, postPath = "") {
     });
 }
 exports.saveUpdatedMarkdown = saveUpdatedMarkdown;
-// export async function createPullRequest(git: SimpleGit, filePath: string) {
-//   const branchName = `zenn-metadata-updater/${filePath}`;
-//   await git.checkoutLocalBranch(branchName);
-//   const statusResponse = await git.status();
-//   debug(statusResponse.modified.toString());
-//   const addResponse = await git.add(filePath);
-//   debug(addResponse);
-//   const commitResponse = await git.commit(
-//     `chore: update metadata ${filePath} by zenn-metadata-updater`
-//   );
-//   debug(JSON.stringify(commitResponse, null, 2));
-//   const pushResponse = await git.push("origin", branchName, ["-f"]);
-//   debug(JSON.stringify(pushResponse, null, 2));
-// }
 function execByThrowError(commandLine, args) {
     return __awaiter(this, void 0, void 0, function* () {
         let result = "";

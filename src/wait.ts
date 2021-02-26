@@ -88,21 +88,6 @@ export async function saveUpdatedMarkdown(
   return savedPaths;
 }
 
-// export async function createPullRequest(git: SimpleGit, filePath: string) {
-//   const branchName = `zenn-metadata-updater/${filePath}`;
-//   await git.checkoutLocalBranch(branchName);
-//   const statusResponse = await git.status();
-//   debug(statusResponse.modified.toString());
-//   const addResponse = await git.add(filePath);
-//   debug(addResponse);
-//   const commitResponse = await git.commit(
-//     `chore: update metadata ${filePath} by zenn-metadata-updater`
-//   );
-//   debug(JSON.stringify(commitResponse, null, 2));
-//   const pushResponse = await git.push("origin", branchName, ["-f"]);
-//   debug(JSON.stringify(pushResponse, null, 2));
-// }
-
 async function execByThrowError(commandLine: string, args?: string[]) {
   let result = "";
 

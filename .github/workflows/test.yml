@@ -16,9 +16,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: "f6bcfb9a62bad3b7963b975d7452ddde0ac86db3"
-          path: "/tmp/test"
+          path: "test"
       - run: |
-          cd /tmp/test
+          cd test
           npm --prefix $GITHUB_WORKSPACE run ci
       - name: upload test report
         if: ${{ always() }}

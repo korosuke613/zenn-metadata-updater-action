@@ -20,21 +20,13 @@ async function run(): Promise<void> {
     const isForcePush = Boolean(getInput("force-push"));
     const githubToken = getInput("github-token");
 
-    const zennMetaData: Partial<ZennMetadata> = {
-      title: title === "" ? undefined : title,
-      emoji: emoji === "" ? undefined : emoji,
-      type: type === "" ? undefined : (type as "idea" | "tech"),
-      published: published === "" ? undefined : Boolean(published),
-    };
-
-    const commitSha = inputCommitSha === "" ? "." : inputCommitSha;
+    const commitSha =
+      inputCommitSha === "" ? process.env.GITHUB_SHA : inputCommitSha;
+    if (!commitSha) {
+      throw new Error("commit-sha is invalid");
+    }
 
     debug(`dry-run: ${dryRun}`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-    debug(`COMMIT_SHA: ${commitSha}`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-
-    if (commitSha === undefined || commitSha === "") {
-      throw new Error("GITHUB_SHA is undefined or null");
-    }
 
     const changedFiles = await getChangedFiles(commitSha);
     debug(`changedFiles: ${changedFiles.toString()}`);
@@ -45,18 +37,19 @@ async function run(): Promise<void> {
     }
     info(`changedMarkdown: ${changedMarkdowns.toString()}`);
 
+    const zennMetaData: Partial<ZennMetadata> = {
+      title: title === "" ? undefined : title,
+      emoji: emoji === "" ? undefined : emoji,
+      type: type === "" ? undefined : (type as "idea" | "tech"),
+      published: published === "" ? undefined : Boolean(published),
+    };
     const savedPaths = await saveUpdatedMarkdown(
       zennMetaData,
       changedMarkdowns
     );
 
-    const workflowSha = process.env.GITHUB_SHA;
-    if (!workflowSha) {
-      throw new Error("GITHUB_BASE_REF is undefined");
-    }
-
     for (const savedPath of savedPaths) {
-      const branchName = await pushChange(savedPath, workflowSha, isForcePush);
+      const branchName = await pushChange(savedPath, commitSha, isForcePush);
 
       const workflowBranch = process.env.GITHUB_HEAD_REF;
       if (!workflowBranch) {
@@ -68,6 +61,7 @@ async function run(): Promise<void> {
       await createPullRequest(
         octokit,
         context.repo,
+        savedPath,
         workflowBranch,
         branchName
       );

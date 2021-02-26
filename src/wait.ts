@@ -110,6 +110,10 @@ async function execByThrowError(commandLine: string, args?: string[]) {
   }
 }
 
+function getCommitMessage(filePath: string) {
+  return `chore: update metadata ${filePath} by zenn-metadata-updater`;
+}
+
 export async function pushChange(
   filePath: string,
   originalBranchSha: string,
@@ -131,7 +135,7 @@ export async function pushChange(
     "user.name='github-actions[bot]'",
     "commit",
     "-m",
-    `chore: update metadata ${filePath} by zenn-metadata-updater`,
+    getCommitMessage(filePath),
   ]);
   await execByThrowError("git", ["add", filePath]);
   await execByThrowError("git", ["push", forceFlag, "origin", branchName]);
@@ -143,13 +147,14 @@ export async function pushChange(
 export async function createPullRequest(
   octokit: ReturnType<typeof getOctokit>,
   githubRepo: { owner: string; repo: string },
+  savedPath: string,
   workflowBranch: string,
   branchName: string
 ) {
   try {
     await octokit.pulls.create({
       ...githubRepo,
-      title: `chore: update matadata ${branchName} by zenn-metadata-updater`,
+      title: getCommitMessage(savedPath),
       head: branchName,
       base: workflowBranch,
     });

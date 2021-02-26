@@ -31,18 +31,11 @@ function run() {
             const published = core_1.getInput("published");
             const isForcePush = Boolean(core_1.getInput("force-push"));
             const githubToken = core_1.getInput("github-token");
-            const zennMetaData = {
-                title: title === "" ? undefined : title,
-                emoji: emoji === "" ? undefined : emoji,
-                type: type === "" ? undefined : type,
-                published: published === "" ? undefined : Boolean(published),
-            };
-            const commitSha = inputCommitSha === "" ? "." : inputCommitSha;
-            core_1.debug(`dry-run: ${dryRun}`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-            core_1.debug(`COMMIT_SHA: ${commitSha}`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-            if (commitSha === undefined || commitSha === "") {
-                throw new Error("GITHUB_SHA is undefined or null");
+            const commitSha = inputCommitSha === "" ? process.env.GITHUB_SHA : inputCommitSha;
+            if (!commitSha) {
+                throw new Error("commit-sha is invalid");
             }
+            core_1.debug(`dry-run: ${dryRun}`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
             const changedFiles = yield wait_1.getChangedFiles(commitSha);
             core_1.debug(`changedFiles: ${changedFiles.toString()}`);
             const changedMarkdowns = yield wait_1.getMarkdowns(changedFiles);
@@ -51,19 +44,21 @@ function run() {
                 return;
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
+            const zennMetaData = {
+                title: title === "" ? undefined : title,
+                emoji: emoji === "" ? undefined : emoji,
+                type: type === "" ? undefined : type,
+                published: published === "" ? undefined : Boolean(published),
+            };
             const savedPaths = yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
-            const workflowSha = process.env.GITHUB_SHA;
-            if (!workflowSha) {
-                throw new Error("GITHUB_BASE_REF is undefined");
-            }
             for (const savedPath of savedPaths) {
-                const branchName = yield wait_1.pushChange(savedPath, workflowSha, isForcePush);
+                const branchName = yield wait_1.pushChange(savedPath, commitSha, isForcePush);
                 const workflowBranch = process.env.GITHUB_HEAD_REF;
                 if (!workflowBranch) {
                     throw new Error("GITHUB_HEAD_REF is undefined");
                 }
                 const octokit = github_1.getOctokit(githubToken);
-                yield wait_1.createPullRequest(octokit, github_1.context.repo, workflowBranch, branchName);
+                yield wait_1.createPullRequest(octokit, github_1.context.repo, savedPath, workflowBranch, branchName);
             }
         }
         catch (error) {
@@ -193,6 +188,9 @@ function execByThrowError(commandLine, args) {
         }
     });
 }
+function getCommitMessage(filePath) {
+    return `chore: update metadata ${filePath} by zenn-metadata-updater`;
+}
 function pushChange(filePath, originalBranchSha, isForcePush) {
     return __awaiter(this, void 0, void 0, function* () {
         const fileName = filePath.replace(".", "_");
@@ -210,7 +208,7 @@ function pushChange(filePath, originalBranchSha, isForcePush) {
             "user.name='github-actions[bot]'",
             "commit",
             "-m",
-            `chore: update metadata ${filePath} by zenn-metadata-updater`,
+            getCommitMessage(filePath),
         ]);
         yield execByThrowError("git", ["add", filePath]);
         yield execByThrowError("git", ["push", forceFlag, "origin", branchName]);
@@ -219,10 +217,10 @@ function pushChange(filePath, originalBranchSha, isForcePush) {
     });
 }
 exports.pushChange = pushChange;
-function createPullRequest(octokit, githubRepo, workflowBranch, branchName) {
+function createPullRequest(octokit, githubRepo, savedPath, workflowBranch, branchName) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield octokit.pulls.create(Object.assign(Object.assign({}, githubRepo), { title: `chore: update matadata ${branchName} by zenn-metadata-updater`, head: branchName, base: workflowBranch }));
+            yield octokit.pulls.create(Object.assign(Object.assign({}, githubRepo), { title: getCommitMessage(savedPath), head: branchName, base: workflowBranch }));
         }
         catch (e) {
             const errorMessage = e.errors[0].message;

@@ -30,3 +30,4 @@ jobs:
       - uses: ./
         with:
           published: true
+          force-push: true

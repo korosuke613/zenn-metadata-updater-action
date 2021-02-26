@@ -32,6 +32,7 @@ function run() {
             const emoji = core_1.getInput("emoji");
             const type = core_1.getInput("type");
             const published = core_1.getInput("published");
+            const isForcePush = Boolean(core_1.getInput("force-push"));
             const zennMetaData = {
                 title: title === "" ? undefined : title,
                 emoji: emoji === "" ? undefined : emoji,
@@ -57,7 +58,7 @@ function run() {
                 .addConfig("user.name", "Some One")
                 .addConfig("user.email", "some@one.com");
             yield git;
-            yield wait_1.createPullRequest(savedPaths[0]);
+            yield wait_1.createPullRequest(savedPaths[0], isForcePush);
         }
         catch (error) {
             core_1.setFailed(error.message);
@@ -200,19 +201,27 @@ function execByThrowError(commandLine, args) {
         }
     });
 }
-function createPullRequest(filePath) {
+function createPullRequest(filePath, isForcePush) {
     return __awaiter(this, void 0, void 0, function* () {
         const fileName = filePath.replace(".", "_");
         const branchName = `zenn-metadata-updater/${fileName}`;
+        let forceFlag = "";
+        if (isForcePush) {
+            forceFlag = "-f";
+        }
         yield execByThrowError("git", ["switch", "-c", branchName]);
         yield execByThrowError("git", ["add", filePath]);
         yield execByThrowError("git", [
+            "-c",
+            "user.name='41898282+github-actions[bot]@users.noreply.github.com'",
+            "-c",
+            "user.email='github-actions[bot]'",
             "commit",
             "-m",
             `"chore: update metadata ${filePath} by zenn-metadata-updater"`,
         ]);
         yield execByThrowError("git", ["add", filePath]);
-        yield execByThrowError("git", ["push", "origin", branchName]);
+        yield execByThrowError("git", ["push", forceFlag, "origin", branchName]);
     });
 }
 exports.createPullRequest = createPullRequest;

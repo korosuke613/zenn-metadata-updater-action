@@ -123,9 +123,17 @@ async function execByThrowError(commandLine: string, args?: string[]) {
   }
 }
 
-export async function createPullRequest(filePath: string) {
+export async function createPullRequest(
+  filePath: string,
+  isForcePush: boolean
+) {
   const fileName = filePath.replace(".", "_");
   const branchName = `zenn-metadata-updater/${fileName}`;
+  let forceFlag: "" | "-f" = "";
+  if (isForcePush) {
+    forceFlag = "-f";
+  }
+
   await execByThrowError("git", ["switch", "-c", branchName]);
   await execByThrowError("git", ["add", filePath]);
   await execByThrowError("git", [
@@ -138,5 +146,5 @@ export async function createPullRequest(filePath: string) {
     `"chore: update metadata ${filePath} by zenn-metadata-updater"`,
   ]);
   await execByThrowError("git", ["add", filePath]);
-  await execByThrowError("git", ["push", "origin", branchName]);
+  await execByThrowError("git", ["push", forceFlag, "origin", branchName]);
 }

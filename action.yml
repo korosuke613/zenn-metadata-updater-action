@@ -22,7 +22,10 @@ inputs:
     required: false
     description: 'Title of Zenn article'
     default: "true"
-
+  force-push:
+    required: false
+    description: 'Title of Zenn article'
+    default: "false"
 runs:
   using: 'node12'
   main: 'dist/index.js'

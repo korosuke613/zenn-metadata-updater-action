@@ -19,6 +19,7 @@ async function run(): Promise<void> {
     const emoji = getInput("emoji");
     const type = getInput("type");
     const published = getInput("published");
+    const isForcePush = Boolean(getInput("force-push"));
 
     const zennMetaData: Partial<ZennMetadata> = {
       title: title === "" ? undefined : title,
@@ -54,7 +55,7 @@ async function run(): Promise<void> {
       .addConfig("user.name", "Some One")
       .addConfig("user.email", "some@one.com");
     await git;
-    await createPullRequest(savedPaths[0]);
+    await createPullRequest(savedPaths[0], isForcePush);
   } catch (error) {
     setFailed(error.message);
   }

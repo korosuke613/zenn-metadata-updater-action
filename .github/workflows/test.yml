@@ -14,7 +14,6 @@ jobs:
       - run: |
           npm ci
       - run: |
-          cd test
           npm run test:ci
       - name: upload test report
         if: ${{ always() }}

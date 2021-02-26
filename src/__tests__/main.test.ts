@@ -8,6 +8,11 @@ import { getChangedFiles, getMarkdowns } from "../wait";
 //   expect(changedFiles).toEqual(expected);
 // });
 
+test("getFiles", async () => {
+  const markdownChangedCommitSha = ".";
+  await getChangedFiles(markdownChangedCommitSha);
+});
+
 test("getMarkdowns", async () => {
   const input = [
     "__tests__/sampleMarkdown.md",

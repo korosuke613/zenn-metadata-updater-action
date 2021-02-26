@@ -18,9 +18,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(2186);
-const zenn_metadata_updater_1 = __webpack_require__(5136);
 const wait_1 = __webpack_require__(5817);
-const fs_1 = __webpack_require__(5747);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -50,21 +48,7 @@ function run() {
                 return;
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
-            for (const markdownPath of changedMarkdowns) {
-                core_1.info(`read ${markdownPath}`);
-                const markdown = fs_1.readFileSync(markdownPath);
-                try {
-                    yield wait_1.updateMarkdown(markdown, zennMetaData);
-                }
-                catch (e) {
-                    if (e instanceof zenn_metadata_updater_1.NotEnoughPropertyError) {
-                        core_1.info("this markdown is not Zenn article. Skipped.");
-                        continue;
-                    }
-                    throw e;
-                }
-            }
-            core_1.setOutput("time", new Date().toTimeString());
+            yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
         }
         catch (error) {
             core_1.setFailed(error.message);
@@ -91,10 +75,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.updateMarkdown = exports.updateZennMetadata = exports.getMarkdowns = exports.getChangedFiles = void 0;
+exports.saveUpdatedMarkdown = exports.updateMarkdown = exports.updateZennMetadata = exports.getMarkdowns = exports.getChangedFiles = void 0;
 const exec_1 = __webpack_require__(1514);
 const zenn_metadata_updater_1 = __webpack_require__(5136);
 const core_1 = __webpack_require__(2186);
+const fs_1 = __webpack_require__(5747);
 function getChangedFiles(githubSha) {
     return __awaiter(this, void 0, void 0, function* () {
         let changedFiles = [];
@@ -147,6 +132,27 @@ function updateMarkdown(markdown, updateParams) {
     });
 }
 exports.updateMarkdown = updateMarkdown;
+function saveUpdatedMarkdown(zennMetaData, changedMarkdowns) {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (const markdownPath of changedMarkdowns) {
+            const markdown = fs_1.readFileSync(markdownPath);
+            core_1.info(`read ${markdownPath}`);
+            try {
+                const updatedMarkdown = yield updateMarkdown(markdown, zennMetaData);
+                fs_1.writeFileSync(markdownPath, updatedMarkdown);
+                core_1.info(`saved ${markdownPath}`);
+            }
+            catch (e) {
+                if (e instanceof zenn_metadata_updater_1.NotEnoughPropertyError) {
+                    core_1.info("this markdown is not Zenn article. Skipped.");
+                    continue;
+                }
+                throw e;
+            }
+        }
+    });
+}
+exports.saveUpdatedMarkdown = saveUpdatedMarkdown;
 
 
 /***/ }),

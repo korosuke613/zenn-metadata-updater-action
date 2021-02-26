@@ -1,12 +1,15 @@
 import { getInput, debug, setOutput, setFailed, info } from "@actions/core";
 import { NotEnoughPropertyError, ZennMetadata } from "zenn-metadata-updater";
 import {
+  createPullRequest,
   getChangedFiles,
   getMarkdowns,
   saveUpdatedMarkdown,
   updateMarkdown,
 } from "./wait";
 import { readFileSync } from "fs";
+import { exec } from "@actions/exec";
+import simpleGit from "simple-git";
 
 async function run(): Promise<void> {
   try {
@@ -43,6 +46,9 @@ async function run(): Promise<void> {
     info(`changedMarkdown: ${changedMarkdowns.toString()}`);
 
     await saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
+
+    const git = simpleGit();
+    await createPullRequest(git, changedMarkdowns[0]);
   } catch (error) {
     setFailed(error.message);
   }

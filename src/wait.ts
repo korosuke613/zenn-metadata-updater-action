@@ -6,6 +6,7 @@ import {
 } from "zenn-metadata-updater";
 import { debug, info } from "@actions/core";
 import { readFileSync, writeFileSync } from "fs";
+import { SimpleGit } from "simple-git";
 
 export async function getChangedFiles(githubSha: string): Promise<string[]> {
   let changedFiles: string[] = [];
@@ -82,4 +83,12 @@ export async function saveUpdatedMarkdown(
       throw e;
     }
   }
+}
+
+export async function createPullRequest(git: SimpleGit, filePath: string) {
+  const branchName = `zenn-metadata-updater/${filePath}`;
+  git.checkoutLocalBranch(branchName);
+  git.add(filePath);
+  git.commit(`chore: update metadata ${filePath} by zenn-metadata-updater`);
+  git.push("origin", branchName, ["-f"]);
 }

@@ -158,7 +158,10 @@ export async function createPullRequest(
     });
   } catch (e) {
     const errorMessage: string = e.errors[0].message;
-    if (errorMessage.startsWith("A pull request already exists for")) {
+    if (
+      errorMessage !== undefined &&
+      errorMessage.startsWith("A pull request already exists for")
+    ) {
       info(`skip because ${errorMessage}`);
       return;
     }

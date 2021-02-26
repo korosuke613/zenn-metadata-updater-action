@@ -11,7 +11,9 @@ jobs:
     if: github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v2
-      - uses: korosuke613/zenn-metadata-updater-action@v0.1.0
+        with:
+          fetch-depth: 2
+      - uses: korosuke613/zenn-metadata-updater-action@v0.1.1
         with:
           published: true
           force-push: true

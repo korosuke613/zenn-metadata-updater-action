@@ -67,6 +67,7 @@ export async function saveUpdatedMarkdown(
   changedMarkdowns: string[],
   postPath: string = ""
 ) {
+  const savedPaths = new Array<string>();
   for (const markdownPath of changedMarkdowns) {
     const markdown = readFileSync(markdownPath);
     info(`read ${markdownPath}`);
@@ -74,6 +75,7 @@ export async function saveUpdatedMarkdown(
       const updatedMarkdown = await updateMarkdown(markdown, zennMetaData);
       const savePath = markdownPath + postPath;
       writeFileSync(savePath, updatedMarkdown);
+      savedPaths.push(savePath);
       info(`saved ${savePath}`);
     } catch (e) {
       if (e instanceof NotEnoughPropertyError) {
@@ -83,6 +85,7 @@ export async function saveUpdatedMarkdown(
       throw e;
     }
   }
+  return savedPaths;
 }
 
 // export async function createPullRequest(git: SimpleGit, filePath: string) {

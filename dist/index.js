@@ -52,12 +52,12 @@ function run() {
                 return;
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
-            yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
+            const savedPaths = yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
             const git = simple_git_1.default()
                 .addConfig("user.name", "Some One")
                 .addConfig("user.email", "some@one.com");
             yield git;
-            yield wait_1.createPullRequest(changedMarkdowns[0]);
+            yield wait_1.createPullRequest(savedPaths[0]);
         }
         catch (error) {
             core_1.setFailed(error.message);
@@ -143,6 +143,7 @@ function updateMarkdown(markdown, updateParams) {
 exports.updateMarkdown = updateMarkdown;
 function saveUpdatedMarkdown(zennMetaData, changedMarkdowns, postPath = "") {
     return __awaiter(this, void 0, void 0, function* () {
+        const savedPaths = new Array();
         for (const markdownPath of changedMarkdowns) {
             const markdown = fs_1.readFileSync(markdownPath);
             core_1.info(`read ${markdownPath}`);
@@ -150,6 +151,7 @@ function saveUpdatedMarkdown(zennMetaData, changedMarkdowns, postPath = "") {
                 const updatedMarkdown = yield updateMarkdown(markdown, zennMetaData);
                 const savePath = markdownPath + postPath;
                 fs_1.writeFileSync(savePath, updatedMarkdown);
+                savedPaths.push(savePath);
                 core_1.info(`saved ${savePath}`);
             }
             catch (e) {
@@ -160,6 +162,7 @@ function saveUpdatedMarkdown(zennMetaData, changedMarkdowns, postPath = "") {
                 throw e;
             }
         }
+        return savedPaths;
     });
 }
 exports.saveUpdatedMarkdown = saveUpdatedMarkdown;

@@ -45,13 +45,16 @@ async function run(): Promise<void> {
     }
     info(`changedMarkdown: ${changedMarkdowns.toString()}`);
 
-    await saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
+    const savedPaths = await saveUpdatedMarkdown(
+      zennMetaData,
+      changedMarkdowns
+    );
 
     const git = simpleGit()
       .addConfig("user.name", "Some One")
       .addConfig("user.email", "some@one.com");
     await git;
-    await createPullRequest(changedMarkdowns[0]);
+    await createPullRequest(savedPaths[0]);
   } catch (error) {
     setFailed(error.message);
   }

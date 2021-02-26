@@ -50,26 +50,27 @@ async function run(): Promise<void> {
       changedMarkdowns
     );
 
-    const workflowBaseRef = process.env.GITHUB_BASE_REF;
-    if (!workflowBaseRef) {
+    const workflowRef = process.env.GITHUB_REF;
+    if (!workflowRef) {
       throw new Error("GITHUB_BASE_REF is undefined");
     }
 
     for (const savedPath of savedPaths) {
-      const branchName = await pushChange(
-        savedPath,
-        workflowBaseRef,
-        isForcePush
-      );
+      const branchName = await pushChange(savedPath, workflowRef, isForcePush);
 
-      const workflowRef = process.env.GITHUB_REF;
-      if (!workflowRef) {
+      const workflowBranch = process.env.GITHUB_HEAD_REF;
+      if (!workflowBranch) {
         throw new Error("GITHUB_HEAD_REF is undefined");
       }
 
       const octokit = getOctokit(githubToken);
 
-      await createPullRequest(octokit, context.repo, workflowRef, branchName);
+      await createPullRequest(
+        octokit,
+        context.repo,
+        workflowBranch,
+        branchName
+      );
     }
   } catch (error) {
     setFailed(error.message);

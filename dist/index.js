@@ -52,18 +52,18 @@ function run() {
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
             const savedPaths = yield wait_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
-            const workflowBaseRef = process.env.GITHUB_BASE_REF;
-            if (!workflowBaseRef) {
+            const workflowRef = process.env.GITHUB_REF;
+            if (!workflowRef) {
                 throw new Error("GITHUB_BASE_REF is undefined");
             }
             for (const savedPath of savedPaths) {
-                const branchName = yield wait_1.pushChange(savedPath, workflowBaseRef, isForcePush);
-                const workflowRef = process.env.GITHUB_REF;
-                if (!workflowRef) {
+                const branchName = yield wait_1.pushChange(savedPath, workflowRef, isForcePush);
+                const workflowBranch = process.env.GITHUB_HEAD_REF;
+                if (!workflowBranch) {
                     throw new Error("GITHUB_HEAD_REF is undefined");
                 }
                 const octokit = github_1.getOctokit(githubToken);
-                yield wait_1.createPullRequest(octokit, github_1.context.repo, workflowRef, branchName);
+                yield wait_1.createPullRequest(octokit, github_1.context.repo, workflowBranch, branchName);
             }
         }
         catch (error) {

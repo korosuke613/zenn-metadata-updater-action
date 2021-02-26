@@ -22,8 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: "git log -m -1 --name-only --pretty=format: ."
-      - run: git log
+      - run: "git log -m -1 --name-only --pretty=format: HEAD"
+      - run: "git log -m -1 --name-only HEAD"
       - uses: ./
         with:
           published: true

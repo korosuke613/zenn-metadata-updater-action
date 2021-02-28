@@ -4,7 +4,8 @@
     "src/**/*.ts",
     "src/__tests__/**/*.ts",
     ".eslintrc.js",
-    "jest.config.js"
+    "jest.config.js",
+    "ship.config.js"
   ],
   "exclude": [
     "node_modules",

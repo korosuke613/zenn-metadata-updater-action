@@ -194,26 +194,46 @@ const toBoolean = (value) => {
         return false;
     return undefined;
 };
+function getParams() {
+    const inputCommitSha = core_1.getInput("commit-sha");
+    const title = core_1.getInput("title");
+    const emoji = core_1.getInput("emoji");
+    const type = core_1.getInput("type");
+    const published = core_1.getInput("published");
+    const githubToken = core_1.getInput("github-token");
+    const dryRun = toBoolean(core_1.getInput("dry-run"));
+    if (!dryRun) {
+        throw new Error("dryRun is invalid");
+    }
+    const commitSha = inputCommitSha === "" ? process.env.GITHUB_SHA : inputCommitSha;
+    if (!commitSha) {
+        throw new Error("commit-sha is invalid");
+    }
+    const isForcePush = toBoolean(core_1.getInput("force-push"));
+    if (!isForcePush) {
+        throw new Error("force-push is invalid");
+    }
+    const zennMetadata = {
+        title: title === "" ? undefined : title,
+        emoji: emoji === "" ? undefined : emoji,
+        type: type === "" ? undefined : type,
+        published: toBoolean(published),
+    };
+    const params = {
+        dryRun,
+        zennMetadata,
+        githubToken,
+        commitSha,
+        isForcePush,
+    };
+    return params;
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const dryRun = toBoolean(core_1.getInput("dry-run"));
-            const inputCommitSha = core_1.getInput("commit-sha");
-            const title = core_1.getInput("title");
-            const emoji = core_1.getInput("emoji");
-            const type = core_1.getInput("type");
-            const published = core_1.getInput("published");
-            const githubToken = core_1.getInput("github-token");
-            const commitSha = inputCommitSha === "" ? process.env.GITHUB_SHA : inputCommitSha;
-            if (!commitSha) {
-                throw new Error("commit-sha is invalid");
-            }
-            const isForcePush = toBoolean(core_1.getInput("force-push"));
-            if (!isForcePush) {
-                throw new Error("force-push is invalid");
-            }
+            const params = getParams();
             // 変更されたマークダウンの取得とパラメータのアップデート
-            const changedFiles = yield functions_1.getChangedFiles(commitSha);
+            const changedFiles = yield functions_1.getChangedFiles(params.commitSha);
             core_1.debug(`changedFiles: ${changedFiles.toString()}`);
             const changedMarkdowns = yield functions_1.getMarkdowns(changedFiles);
             if (changedMarkdowns.length === 0) {
@@ -222,25 +242,20 @@ function run() {
             }
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
             // マークダウンの保存とプッシュとプルリクエスト作成
-            const zennMetaData = {
-                title: title === "" ? undefined : title,
-                emoji: emoji === "" ? undefined : emoji,
-                type: type === "" ? undefined : type,
-                published: toBoolean(published),
-            };
-            const savedPaths = yield functions_1.saveUpdatedMarkdown(zennMetaData, changedMarkdowns);
+            const savedPaths = yield functions_1.saveUpdatedMarkdown(params.zennMetadata, changedMarkdowns);
             // dry-run = true の場合はプッシュ、プルリクエストの作成をスキップする
-            if (dryRun) {
+            if (params.dryRun) {
                 core_1.info("dry-run is true. skip after process.");
                 return;
             }
+            // 変更されたファイルごとにプッシュし、プルリクエストを作成する
             for (const savedPath of savedPaths) {
-                const branchName = yield functions_1.pushChange(savedPath, commitSha, isForcePush);
+                const branchName = yield functions_1.pushChange(savedPath, params.commitSha, params.isForcePush);
                 const workflowBranch = process.env.GITHUB_HEAD_REF;
                 if (!workflowBranch) {
                     throw new Error("GITHUB_HEAD_REF is undefined");
                 }
-                const octokit = github_1.getOctokit(githubToken);
+                const octokit = github_1.getOctokit(params.githubToken);
                 yield functions_1.createPullRequest(octokit, github_1.context.repo, savedPath, workflowBranch, branchName);
             }
         }

@@ -20,7 +20,7 @@ test("getFiles", async () => {
   await getChangedFiles(markdownChangedCommitSha);
 });
 
-test("getMarkdowns", async () => {
+test("getMarkdowns", () => {
   const input = [
     "__tests__/sampleMarkdown.md",
     ".eslintrc.js",
@@ -28,7 +28,7 @@ test("getMarkdowns", async () => {
     "src/main.ts",
   ];
 
-  const markdownFiles = await getMarkdowns(input);
+  const markdownFiles = getMarkdowns(input);
   const expected = ["__tests__/sampleMarkdown.md", "test.md"];
 
   expect(markdownFiles).toEqual(expected);

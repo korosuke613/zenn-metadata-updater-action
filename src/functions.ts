@@ -28,11 +28,8 @@ export async function getChangedFiles(githubSha: string): Promise<string[]> {
   return changedFiles.filter((path) => path !== "");
 }
 
-export async function getMarkdowns(changedFiles: string[]): Promise<string[]> {
-  return changedFiles.filter((filePath) => {
-    console.log(`isMarkdown: ${filePath}, ${filePath.endsWith(".md")}`);
-    return filePath.endsWith(".md");
-  });
+export function getMarkdowns(changedFiles: string[]): string[] {
+  return changedFiles.filter((filePath) => filePath.endsWith(".md"));
 }
 
 export async function updateZennMetadata(

@@ -1,6 +1,6 @@
 {
   "name": "zenn-metadata-updater-action",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "GitHub Action to update metadata in Zenn markdown file.",
   "main": "lib/main.js",

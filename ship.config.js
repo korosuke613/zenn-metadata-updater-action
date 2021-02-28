@@ -1,4 +1,4 @@
 module.exports = {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  publishCommand: () => {},
+  // jeslint-disable-next-line @typescript-eslint/no-empty-function
+  // publishCommand: () => {},
 };

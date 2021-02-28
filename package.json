@@ -19,12 +19,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/korosuke613/zenn-metadata-updater-action.git"
   },
   "keywords": [
     "actions",
     "node",
-    "setup"
+    "zenn"
   ],
   "author": "Futa Hirakoba <korosuke613613@gmail.com> (https://korosuke613.github.io/)",
   "license": "MIT",

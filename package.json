@@ -15,16 +15,17 @@
     "test:ci": "jest --ci --runInBand",
     "check": "npm-run-all -s build -p test:ci lint",
     "release": "shipjs prepare",
-    "prerelease": "npm-run-all -l -p build-package test lint"
+    "test-lint": "npm-run-all -l -p test lint",
+    "prerelease": "npm-run-all -l -p build-package test-lint"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/korosuke613/zenn-metadata-updater-action.git"
   },
   "keywords": [
     "actions",
     "node",
-    "setup"
+    "zenn"
   ],
   "author": "Futa Hirakoba <korosuke613613@gmail.com> (https://korosuke613.github.io/)",
   "license": "MIT",

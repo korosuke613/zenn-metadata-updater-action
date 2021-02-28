@@ -1,4 +1,5 @@
 module.exports = {
-  // jeslint-disable-next-line @typescript-eslint/no-empty-function
-  // publishCommand: () => {},
+  publishCommand: () => {
+    console.log("no publish");
+  },
 };

@@ -4,27 +4,15 @@ This action allows caching dependencies and build outputs to improve workflow ex
 
 ## Usage
 
+### Input
+See action.yml
+
 ### Pre-requisites
-Create a workflow `.yml` file in your repositories `.github/workflows` directory. An [example workflow](#example-workflow) is available below. For more information, reference the GitHub Help Documentation for [Creating a workflow file](https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file).
+Create a workflow `.yml` file in your repositories `.github/workflows` directory. An example workflow is available below. For more information, reference the GitHub Help Documentation for [Creating a workflow file](https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file).
 
-### Inputs
+#### Example workflow
 
-* `github-token` - A GITHUB_TOKEN.
-* `dry-run` - A boolean, if true, no push or pull request will be created.
-* `title` - A title of Zenn article.
-* `emoji` - An emoji of Zenn article.
-* `type` - A type of Zenn article.
-* `topics` - A list of topic of Zenn article.
-* `published` - A boolean of published of Zenn article. (default: true)
-* `force-push` - A boolean, if true, override the push to the existing branch. (default: false)
-
-
-### Outputs
-nothing
-
-
-### Example workflow
-
+[example-published-true.yml](.github/workflows/example-published-true.yml)
 ```yaml
 name: Create published=true pull request
 on:
@@ -40,9 +28,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 2
-        # Todo: fetch-depth=2の理由書く
-      - uses: korosuke613/zenn-metadata-updater-action@v0.1.0
+          fetch-depth: 2 # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
+      - uses: korosuke613/zenn-metadata-updater-action@v0.1.3
         with:
           published: true
           force-push: true

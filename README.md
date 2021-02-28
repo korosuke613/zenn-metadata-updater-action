@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 2 # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
-      - uses: korosuke613/zenn-metadata-updater-action@v0.1.3
+      - uses: korosuke613/zenn-metadata-updater-action@v1
         with:
           published: true
           force-push: true

@@ -1,4 +1,4 @@
-## [1.0.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v0.0.0...v1.0.0) (2021-02-28)
+# [1.0.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v0.0.0...v1.0.0) (2021-02-28)
 
 ### Features
 * Generally Available

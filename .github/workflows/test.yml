@@ -3,15 +3,28 @@ on: # rebuild any PRs and main branch changes
   pull_request
 
 jobs:
-  build-test-lint-package: # make sure build/ci work properly
+  build-package: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          npm ci
-      - run: |
-          npm run prerelease
-      - name: upload test report
+      - run: npm ci
+      - run: npm run build-package
+      - name: Check that the build file has been committed.
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "OK, workspace is clean"
+          else
+            echo "Failed, workspace is not clean"
+            exit 1
+          fi
+
+  test-lint: # make sure build/ci work properly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm ci
+      - run: npm run test-lint
+      - name: Upload test report
         if: ${{ always() }}
         uses: mikepenz/action-junit-report@v2
         with:

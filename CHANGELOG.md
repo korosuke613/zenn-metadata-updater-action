@@ -1,3 +1,13 @@
+## [0.1.2](https://github.com/actions/typescript-action/compare/v0.1.1...v0.1.2) (2021-02-28)
+
+
+### Bug Fixes
+
+* latest index.js.map ([d09aeb0](https://github.com/actions/typescript-action/commit/d09aeb0e0ddef12f5884f9503b3547ae37bc52e2))
+* prerelease ([999bd36](https://github.com/actions/typescript-action/commit/999bd368adbbea27ab025f4882899064084a2e27))
+
+
+
 # [0.1.0](https://github.com/actions/typescript-action/compare/v0.0.0...v0.1.0) (2021-02-26)
 
 

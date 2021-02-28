@@ -1,5 +1,3 @@
 module.exports = {
-  publishCommand: () => {
-    console.log("no publish");
-  },
+  publishCommand: () => "echo 'no publish'",
 };

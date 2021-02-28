@@ -132,7 +132,6 @@ export async function pushChange(
     "-m",
     getCommitMessage(filePath),
   ]);
-  await execByThrowError("git", ["add", filePath]);
   await execByThrowError("git", ["push", forceFlag, "origin", branchName]);
   await execByThrowError("git", ["checkout", originalBranchSha]);
 

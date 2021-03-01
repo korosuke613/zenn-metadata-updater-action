@@ -1,3 +1,12 @@
+## [1.0.3](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.2...v1.0.3) (2021-03-01)
+
+
+### Bug Fixes
+
+* pull request error check ([eb7147f](https://github.com/korosuke613/zenn-metadata-updater-action/commit/eb7147f8bfae203eb18e6fc6309af9b281767a5a))
+
+
+
 ## [1.0.2](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.1...v1.0.2) (2021-03-01)
 
 

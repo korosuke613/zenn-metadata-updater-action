@@ -1,3 +1,12 @@
+## [1.0.2](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.1...v1.0.2) (2021-03-01)
+
+
+### Bug Fixes
+
+* check dryrun ([bd5b3e6](https://github.com/korosuke613/zenn-metadata-updater-action/commit/bd5b3e6f64aeb94d2327a9e3c0884affd2e7e22f))
+
+
+
 ## [1.0.1](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.0...v1.0.1) (2021-03-01)
 
 

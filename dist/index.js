@@ -41,12 +41,7 @@ function getChangedFiles(githubSha) {
 }
 exports.getChangedFiles = getChangedFiles;
 function getMarkdowns(changedFiles) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return changedFiles.filter((filePath) => {
-            console.log(`isMarkdown: ${filePath}, ${filePath.endsWith(".md")}`);
-            return filePath.endsWith(".md");
-        });
-    });
+    return changedFiles.filter((filePath) => filePath.endsWith(".md"));
 }
 exports.getMarkdowns = getMarkdowns;
 function updateZennMetadata(updater, updateParams) {
@@ -141,7 +136,6 @@ function pushChange(filePath, originalBranchSha, isForcePush) {
             "-m",
             getCommitMessage(filePath),
         ]);
-        yield execByThrowError("git", ["add", filePath]);
         yield execByThrowError("git", ["push", forceFlag, "origin", branchName]);
         yield execByThrowError("git", ["checkout", originalBranchSha]);
         return branchName;
@@ -235,7 +229,8 @@ function run() {
             // 変更されたマークダウンの取得とパラメータのアップデート
             const changedFiles = yield functions_1.getChangedFiles(params.commitSha);
             core_1.debug(`changedFiles: ${changedFiles.toString()}`);
-            const changedMarkdowns = yield functions_1.getMarkdowns(changedFiles);
+            const changedMarkdowns = functions_1.getMarkdowns(changedFiles);
+            core_1.debug(`markdowns: ${changedMarkdowns.toString()}`);
             if (changedMarkdowns.length === 0) {
                 core_1.info("Markdown files is no changed.");
                 return;

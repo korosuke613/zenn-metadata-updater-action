@@ -71,7 +71,8 @@ async function run(): Promise<void> {
     // 変更されたマークダウンの取得とパラメータのアップデート
     const changedFiles = await getChangedFiles(params.commitSha);
     debug(`changedFiles: ${changedFiles.toString()}`);
-    const changedMarkdowns = await getMarkdowns(changedFiles);
+    const changedMarkdowns = getMarkdowns(changedFiles);
+    debug(`markdowns: ${changedMarkdowns.toString()}`);
     if (changedMarkdowns.length === 0) {
       info("Markdown files is no changed.");
       return;

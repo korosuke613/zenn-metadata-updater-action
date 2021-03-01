@@ -196,8 +196,8 @@ function getParams() {
     const published = core_1.getInput("published");
     const githubToken = core_1.getInput("github-token");
     const dryRun = toBoolean(core_1.getInput("dry-run"));
-    if (!dryRun) {
-        throw new Error("dryRun is invalid");
+    if (dryRun === undefined) {
+        throw new Error("dry-run is invalid");
     }
     const commitSha = inputCommitSha === "" ? process.env.GITHUB_SHA : inputCommitSha;
     if (!commitSha) {

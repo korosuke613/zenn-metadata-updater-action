@@ -32,8 +32,8 @@ function getParams() {
   const githubToken = getInput("github-token");
 
   const dryRun = toBoolean(getInput("dry-run"));
-  if (!dryRun) {
-    throw new Error("dryRun is invalid");
+  if (dryRun === undefined) {
+    throw new Error("dry-run is invalid");
   }
 
   const commitSha =

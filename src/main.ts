@@ -98,16 +98,16 @@ async function run(): Promise<void> {
         params.commitSha,
         params.isForcePush
       );
-      const workflowBranch = process.env.GITHUB_HEAD_REF;
+      const workflowBranch = process.env.GITHUB_REF;
       if (!workflowBranch) {
-        throw new Error("GITHUB_HEAD_REF is undefined");
+        throw new Error("GITHUB_REF is undefined");
       }
       const octokit = getOctokit(params.githubToken);
       await createPullRequest(
         octokit,
         context.repo,
         savedPath,
-        workflowBranch,
+        workflowBranch.replace(/refs\/heads\//, ""),
         branchName
       );
     }

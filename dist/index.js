@@ -246,12 +246,12 @@ function run() {
             // 変更されたファイルごとにプッシュし、プルリクエストを作成する
             for (const savedPath of savedPaths) {
                 const branchName = yield functions_1.pushChange(savedPath, params.commitSha, params.isForcePush);
-                const workflowBranch = process.env.GITHUB_HEAD_REF;
+                const workflowBranch = process.env.GITHUB_REF;
                 if (!workflowBranch) {
-                    throw new Error("GITHUB_HEAD_REF is undefined");
+                    throw new Error("GITHUB_REF is undefined");
                 }
                 const octokit = github_1.getOctokit(params.githubToken);
-                yield functions_1.createPullRequest(octokit, github_1.context.repo, savedPath, workflowBranch, branchName);
+                yield functions_1.createPullRequest(octokit, github_1.context.repo, savedPath, workflowBranch.replace(/refs\/heads\//, ""), branchName);
             }
         }
         catch (error) {

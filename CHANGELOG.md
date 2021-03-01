@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.0...v1.0.1) (2021-03-01)
+
+
+### Bug Fixes
+
+* remove unnecessary git add ([7e17543](https://github.com/korosuke613/zenn-metadata-updater-action/commit/7e17543416b7ceacd8c467021e76293e4236e926))
+
+
+
 # [1.0.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v0.0.0...v1.0.0) (2021-02-28)
 
 ### Features

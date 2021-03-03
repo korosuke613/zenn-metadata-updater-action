@@ -17,7 +17,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createPullRequest = exports.pushChange = exports.saveUpdatedMarkdown = exports.updateMarkdown = exports.updateZennMetadata = exports.getMarkdowns = exports.getChangedFiles = void 0;
+exports.createPullRequest = exports.pushChange = exports.isWorkingTreeClean = exports.saveUpdatedMarkdown = exports.updateMarkdown = exports.updateZennMetadata = exports.getMarkdowns = exports.getChangedFiles = void 0;
 const exec_1 = __webpack_require__(1514);
 const zenn_metadata_updater_1 = __webpack_require__(5136);
 const core_1 = __webpack_require__(2186);
@@ -112,11 +112,19 @@ function execByThrowError(commandLine, args) {
         if (exitCode !== 0) {
             throw new Error(result);
         }
+        return result;
     });
 }
 function getCommitMessage(filePath) {
     return `chore: update metadata ${filePath} by zenn-metadata-updater`;
 }
+function isWorkingTreeClean() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield execByThrowError("git", ["status", "--porcelain"]);
+        return result === "";
+    });
+}
+exports.isWorkingTreeClean = isWorkingTreeClean;
 function pushChange(filePath, originalBranchSha, isForcePush) {
     return __awaiter(this, void 0, void 0, function* () {
         const fileName = filePath.replace(".", "_");
@@ -238,6 +246,9 @@ function run() {
             core_1.info(`changedMarkdown: ${changedMarkdowns.toString()}`);
             // マークダウンの保存とプッシュとプルリクエスト作成
             const savedPaths = yield functions_1.saveUpdatedMarkdown(params.zennMetadata, changedMarkdowns);
+            if (!(yield functions_1.isWorkingTreeClean())) {
+                core_1.info("not changed files. skip create pull request.");
+            }
             // dry-run = true の場合はプッシュ、プルリクエストの作成をスキップする
             if (params.dryRun) {
                 core_1.info("dry-run is true. skip after process.");

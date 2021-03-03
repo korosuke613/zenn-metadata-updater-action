@@ -86,14 +86,14 @@ async function run(): Promise<void> {
       changedMarkdowns
     );
 
+    if (!(await isWorkingTreeClean())) {
+      info("not changed files. skip create pull request.");
+    }
+
     // dry-run = true の場合はプッシュ、プルリクエストの作成をスキップする
     if (params.dryRun) {
       info("dry-run is true. skip after process.");
       return;
-    }
-
-    if (!(await isWorkingTreeClean())) {
-      info("not changed files. skip create pull request.");
     }
 
     // 変更されたファイルごとにプッシュし、プルリクエストを作成する

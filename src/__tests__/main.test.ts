@@ -1,11 +1,13 @@
 import {
   getChangedFiles,
   getMarkdowns,
+  isWorkingTreeClean,
   saveUpdatedMarkdown,
   updateZennMetadata,
 } from "../functions";
 import { Updater, ZennMetadata } from "zenn-metadata-updater";
 import { readFileSync } from "fs";
+import { exec } from "@actions/exec";
 
 // This test fail on CI.
 // test("getFiles", async () => {
@@ -85,6 +87,23 @@ test("saveUpdatedMarkdown", async () => {
   };
 
   expect(actual).toEqual(expected);
+});
+
+describe("isWorkingTreeClean", () => {
+  const testIf = (condition: boolean) => (condition ? test : test.skip);
+  const onGitHubActions = process.env.CI === "true";
+
+  testIf(onGitHubActions)("Working tree is clean", async () => {
+    const actual = await isWorkingTreeClean();
+    expect(actual).toEqual(true);
+  });
+
+  testIf(onGitHubActions)("Working tree is dirty", async () => {
+    await exec("touch", [".dirty"]);
+    const actual = await isWorkingTreeClean();
+    expect(actual).toEqual(false);
+    await exec("rm", ["-f", "./.dirty"]);
+  });
 });
 
 // test("createPullRequest", async () => {

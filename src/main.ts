@@ -4,6 +4,7 @@ import {
   createPullRequest,
   getChangedFiles,
   getMarkdowns,
+  isWorkingTreeClean,
   pushChange,
   saveUpdatedMarkdown,
 } from "./functions";
@@ -89,6 +90,10 @@ async function run(): Promise<void> {
     if (params.dryRun) {
       info("dry-run is true. skip after process.");
       return;
+    }
+
+    if (!(await isWorkingTreeClean())) {
+      info("not changed files. skip create pull request.");
     }
 
     // 変更されたファイルごとにプッシュし、プルリクエストを作成する

@@ -4,6 +4,7 @@ import {
   createPullRequest,
   getChangedFiles,
   getMarkdowns,
+  isChangedFile,
   pushChange,
   saveUpdatedMarkdown,
 } from "./functions";
@@ -93,6 +94,10 @@ async function run(): Promise<void> {
 
     // 変更されたファイルごとにプッシュし、プルリクエストを作成する
     for (const savedPath of savedPaths) {
+      if (await isChangedFile(savedPath)) {
+        info(`${savedPath} is not changed. skip create pull request.`);
+        continue;
+      }
       const branchName = await pushChange(
         savedPath,
         params.commitSha,

@@ -65,11 +65,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
+      - run: "git log -m -1 --name-only --pretty=format: HEAD"
+      - run: "git log -m -1 --name-only HEAD"
+      - run: "touch .dirty"
+      - uses: ./
+        with:
+          published: true
+          force-push: true
+          dry-run: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  use: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
       - run: "git log -m -1 --name-only --pretty=format: HEAD"
       - run: "git log -m -1 --name-only HEAD"
       - uses: ./
         with:
           published: true
           force-push: true
-          dry-run: true
           github-token: ${{ secrets.GITHUB_TOKEN }}

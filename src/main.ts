@@ -4,6 +4,7 @@ import {
   createPullRequest,
   getChangedFiles,
   getMarkdowns,
+  isWorkingTreeClean,
   pushChange,
   saveUpdatedMarkdown,
 } from "./functions";
@@ -84,6 +85,10 @@ async function run(): Promise<void> {
       params.zennMetadata,
       changedMarkdowns
     );
+
+    if (!(await isWorkingTreeClean())) {
+      info("not changed files. skip create pull request.");
+    }
 
     // dry-run = true の場合はプッシュ、プルリクエストの作成をスキップする
     if (params.dryRun) {

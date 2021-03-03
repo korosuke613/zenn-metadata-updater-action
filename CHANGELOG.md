@@ -1,3 +1,12 @@
+## [1.0.6](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.5...v1.0.6) (2021-03-03)
+
+
+### Bug Fixes
+
+* don't exit when working tree is clean. ([278f2c8](https://github.com/korosuke613/zenn-metadata-updater-action/commit/278f2c81cf182502f11143abe43889b4f1efc6a0))
+
+
+
 ## [1.0.5](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.4...v1.0.5) (2021-03-01)
 
 

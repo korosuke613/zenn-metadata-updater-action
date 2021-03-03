@@ -17,7 +17,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createPullRequest = exports.pushChange = exports.saveUpdatedMarkdown = exports.updateMarkdown = exports.updateZennMetadata = exports.getMarkdowns = exports.getChangedFiles = void 0;
+exports.createPullRequest = exports.pushChange = exports.isChangedFile = exports.saveUpdatedMarkdown = exports.updateMarkdown = exports.updateZennMetadata = exports.getMarkdowns = exports.getChangedFiles = void 0;
 const exec_1 = __webpack_require__(1514);
 const zenn_metadata_updater_1 = __webpack_require__(5136);
 const core_1 = __webpack_require__(2186);
@@ -112,11 +112,23 @@ function execByThrowError(commandLine, args) {
         if (exitCode !== 0) {
             throw new Error(result);
         }
+        return result;
     });
 }
 function getCommitMessage(filePath) {
     return `chore: update metadata ${filePath} by zenn-metadata-updater`;
 }
+function isChangedFile(filePath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield execByThrowError("git", [
+            "status",
+            filePath,
+            "--porcelain",
+        ]);
+        return result === "";
+    });
+}
+exports.isChangedFile = isChangedFile;
 function pushChange(filePath, originalBranchSha, isForcePush) {
     return __awaiter(this, void 0, void 0, function* () {
         const fileName = filePath.replace(".", "_");
@@ -245,6 +257,10 @@ function run() {
             }
             // 変更されたファイルごとにプッシュし、プルリクエストを作成する
             for (const savedPath of savedPaths) {
+                if (yield functions_1.isChangedFile(savedPath)) {
+                    core_1.info(`${savedPath} is not changed. skip create pull request.`);
+                    continue;
+                }
                 const branchName = yield functions_1.pushChange(savedPath, params.commitSha, params.isForcePush);
                 const workflowBranch = process.env.GITHUB_REF;
                 if (!workflowBranch) {

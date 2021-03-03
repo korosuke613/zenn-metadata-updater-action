@@ -103,10 +103,20 @@ async function execByThrowError(commandLine: string, args?: string[]) {
   if (exitCode !== 0) {
     throw new Error(result);
   }
+  return result;
 }
 
 function getCommitMessage(filePath: string) {
   return `chore: update metadata ${filePath} by zenn-metadata-updater`;
+}
+
+export async function isChangedFile(filePath: string) {
+  const result = await execByThrowError("git", [
+    "status",
+    filePath,
+    "--porcelain",
+  ]);
+  return result === "";
 }
 
 export async function pushChange(

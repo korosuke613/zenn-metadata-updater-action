@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@cybozu/eslint-config": "^11.0.4",
-    "@types/jest": "^26.0.15",
+    "@types/jest": "^26.0.22",
     "@types/node": "^14.14.9",
     "@types/yaml-front-matter": "^4.1.0",
     "@vercel/ncc": "^0.25.1",

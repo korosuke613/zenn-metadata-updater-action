@@ -42,7 +42,7 @@
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.9",
     "@types/yaml-front-matter": "^4.1.0",
-    "@vercel/ncc": "^0.25.1",
+    "@vercel/ncc": "^0.29.1",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-github": "^4.1.1",

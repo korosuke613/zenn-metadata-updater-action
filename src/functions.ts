@@ -156,7 +156,7 @@ export async function createPullRequest(
   branchName: string
 ) {
   try {
-    await octokit.pulls.create({
+    await octokit.rest.pulls.create({
       ...githubRepo,
       title: getCommitMessage(savedPath),
       head: branchName,

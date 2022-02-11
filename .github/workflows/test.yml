@@ -14,13 +14,22 @@ jobs:
           cache: npm
 
       - run: npm ci
+
       - run: npm run build-package
+
+      - name: correct vercel/ncc crlf output
+        run: |
+          # See https://github.com/vercel/ncc/issues/638
+          sed -i 's/\x0D$//' ./dist/index.js
+
       - name: Check that the build file has been committed.
         run: |
           if [ -z "$(git status --porcelain)" ]; then
             echo "OK, workspace is clean"
           else
             echo "Failed, workspace is not clean"
+            git status
+            git diff
             exit 1
           fi
 

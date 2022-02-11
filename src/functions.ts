@@ -162,7 +162,7 @@ export async function createPullRequest(
       head: branchName,
       base: workflowBranch,
     });
-  } catch (e) {
+  } catch (e: any) {
     const errorMessage: string = e.errors[0].message;
     if (
       errorMessage !== undefined &&

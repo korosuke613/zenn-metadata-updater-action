@@ -1,3 +1,17 @@
+# [1.1.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.6...v1.1.0) (2022-02-11)
+
+
+### Bug Fixes
+
+* `invalid` error when the `force-push` option is not set. ([07e81b5](https://github.com/korosuke613/zenn-metadata-updater-action/commit/07e81b5e2db5861f295325f2cf6641ba9998f8b5))
+
+
+### Features
+
+* validate metadata ([bb6cc9e](https://github.com/korosuke613/zenn-metadata-updater-action/commit/bb6cc9e2c9bd292415606e0676f2bbb486afcd66))
+
+
+
 ## [1.0.6](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.5...v1.0.6) (2021-03-03)
 
 

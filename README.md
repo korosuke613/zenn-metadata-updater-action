@@ -55,7 +55,7 @@ jobs:
       - uses: korosuke613/zenn-metadata-updater-action@v1
         with:
           validate-only: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ""
 ```
 ## License
 The scripts and documentation in this project are released under the [MIT License](LICENSE)

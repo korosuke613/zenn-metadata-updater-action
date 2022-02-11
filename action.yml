@@ -34,5 +34,5 @@ inputs:
     description: 'A boolean, if true, override the push to the existing branch. (default: false)'
     default: "false"
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'

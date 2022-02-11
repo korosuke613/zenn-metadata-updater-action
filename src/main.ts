@@ -52,7 +52,7 @@ function getParams() {
   }
 
   const isForcePush = toBoolean(getInput("force-push"));
-  if (!isForcePush) {
+  if (isForcePush === undefined) {
     throw new Error("force-push is invalid");
   }
 

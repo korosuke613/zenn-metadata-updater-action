@@ -228,7 +228,7 @@ function getParams() {
         throw new Error("commit-sha is invalid");
     }
     const isForcePush = toBoolean((0, core_1.getInput)("force-push"));
-    if (!isForcePush) {
+    if (isForcePush === undefined) {
         throw new Error("force-push is invalid");
     }
     const zennMetadata = {

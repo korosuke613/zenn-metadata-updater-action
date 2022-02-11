@@ -12,8 +12,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 2  # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
-# TODO: Remove comments when v1 is updated.
-#      - uses: korosuke613/zenn-metadata-updater-action@v1
-#        with:
-#          validate-only: true
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: korosuke613/zenn-metadata-updater-action@v1
+        with:
+          validate-only: true
+          github-token: ""

@@ -4,6 +4,7 @@ import {
   isChangedFile,
   saveUpdatedMarkdown,
   updateZennMetadata,
+  validateMetadata,
 } from "../functions";
 import { Updater, ZennMetadata } from "zenn-metadata-updater";
 import { readFileSync } from "fs";
@@ -87,6 +88,13 @@ test("saveUpdatedMarkdown", async () => {
   };
 
   expect(actual).toEqual(expected);
+});
+
+test("validateMetadata", async () => {
+  const markdown = readFileSync("src/__tests__/sampleMarkdown.md");
+  await expect(validateMetadata(markdown)).rejects.toThrowError(
+    "Invalid metadata: emoji"
+  );
 });
 
 describe("isWorkingTreeClean", () => {

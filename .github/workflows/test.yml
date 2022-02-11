@@ -81,3 +81,25 @@ jobs:
           published: true
           force-push: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  use-with-validate-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
+      - run: "git log -m -1 --name-only --pretty=format: HEAD"
+      - run: "git log -m -1 --name-only HEAD"
+      - run: |
+          cp ./src/__tests__/sampleMarkdown.md .
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add -A
+          git commit -m "test"
+      - name: "Execute validate-only. This step must fail. Print 'Error: Invalid metadata: emoji'."
+        uses: ./
+        with:
+          validate-only: true
+          commit-sha: .
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true

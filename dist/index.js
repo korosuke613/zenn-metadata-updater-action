@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createPullRequest = exports.pushChange = exports.isChangedFile = exports.saveUpdatedMarkdown = exports.updateMarkdown = exports.updateZennMetadata = exports.getMarkdowns = exports.getChangedFiles = void 0;
+exports.createPullRequest = exports.pushChange = exports.isChangedFile = exports.saveUpdatedMarkdown = exports.updateMarkdown = exports.validateMetadata = exports.updateZennMetadata = exports.getMarkdowns = exports.getChangedFiles = void 0;
 const exec_1 = __nccwpck_require__(1514);
 const zenn_metadata_updater_1 = __nccwpck_require__(5136);
 const core_1 = __nccwpck_require__(2186);
@@ -58,6 +58,14 @@ function updateZennMetadata(updater, updateParams) {
     });
 }
 exports.updateZennMetadata = updateZennMetadata;
+function validateMetadata(markdown) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const updater = new zenn_metadata_updater_1.Updater();
+        yield updater.load(markdown);
+        updater.validateProperty();
+    });
+}
+exports.validateMetadata = validateMetadata;
 function updateMarkdown(markdown, updateParams) {
     return __awaiter(this, void 0, void 0, function* () {
         const updater = new zenn_metadata_updater_1.Updater();
@@ -192,6 +200,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __nccwpck_require__(2186);
 const functions_1 = __nccwpck_require__(358);
 const github_1 = __nccwpck_require__(5438);
+const fs_1 = __nccwpck_require__(7147);
 const toBoolean = (value) => {
     if (value === "true")
         return true;
@@ -209,6 +218,10 @@ function getParams() {
     const dryRun = toBoolean((0, core_1.getInput)("dry-run"));
     if (dryRun === undefined) {
         throw new Error("dry-run is invalid");
+    }
+    const validateOnly = toBoolean((0, core_1.getInput)("validate-only"));
+    if (validateOnly === undefined) {
+        throw new Error("validate-only is invalid");
     }
     const commitSha = inputCommitSha === "" ? process.env.GITHUB_SHA : inputCommitSha;
     if (!commitSha) {
@@ -230,6 +243,7 @@ function getParams() {
         githubToken,
         commitSha,
         isForcePush,
+        validateOnly,
     };
     return params;
 }
@@ -247,6 +261,15 @@ function run() {
                 return;
             }
             (0, core_1.info)(`changedMarkdown: ${changedMarkdowns.toString()}`);
+            if (params.validateOnly) {
+                (0, core_1.info)("validate-only is true. Only validate metadata.");
+                for (const markdownPath of changedMarkdowns) {
+                    const markdown = (0, fs_1.readFileSync)(markdownPath);
+                    (0, core_1.info)(`validate checking: ${markdownPath}`);
+                    yield (0, functions_1.validateMetadata)(markdown);
+                }
+                return;
+            }
             // マークダウンの保存とプッシュとプルリクエスト作成
             const savedPaths = yield (0, functions_1.saveUpdatedMarkdown)(params.zennMetadata, changedMarkdowns);
             // dry-run = true の場合はプッシュ、プルリクエストの作成をスキップする

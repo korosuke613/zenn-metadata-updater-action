@@ -7,6 +7,7 @@ import {
 import { debug, info } from "@actions/core";
 import { readFileSync, writeFileSync } from "fs";
 import { getOctokit } from "@actions/github";
+import * as Buffer from "buffer";
 
 export async function getChangedFiles(githubSha: string): Promise<string[]> {
   let changedFiles: string[] = [];
@@ -46,6 +47,12 @@ export async function updateZennMetadata(
   debug(`updated metadata: ${JSON.stringify(metadata, null, 2)}`);
 
   return metadata;
+}
+
+export async function validateMetadata(markdown: Buffer) {
+  const updater = new Updater();
+  await updater.load(markdown);
+  updater.validateProperty();
 }
 
 export async function updateMarkdown(

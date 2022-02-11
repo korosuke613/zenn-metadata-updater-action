@@ -36,5 +36,26 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+[example-validate-metadata.yml](.github/workflows/example-validate-metadata.yml)
+```yaml
+name: Validate Zenn metadata
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-zenn-metadata:
+    name: Validate Zenn metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2  # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
+      - uses: korosuke613/zenn-metadata-updater-action@v1
+        with:
+          validate-only: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+```
 ## License
 The scripts and documentation in this project are released under the [MIT License](LICENSE)

@@ -7,8 +7,10 @@ import {
   isChangedFile,
   pushChange,
   saveUpdatedMarkdown,
+  validateMetadata,
 } from "./functions";
 import { context, getOctokit } from "@actions/github";
+import { readFileSync } from "fs";
 
 const toBoolean = (value: string) => {
   if (value === "true") return true;
@@ -22,6 +24,7 @@ type Params = {
   githubToken: string;
   commitSha: string;
   isForcePush: boolean;
+  validateOnly: boolean;
 };
 
 function getParams() {
@@ -37,6 +40,11 @@ function getParams() {
     throw new Error("dry-run is invalid");
   }
 
+  const validateOnly = toBoolean(getInput("validate-only"));
+  if (validateOnly === undefined) {
+    throw new Error("validate-only is invalid");
+  }
+
   const commitSha =
     inputCommitSha === "" ? process.env.GITHUB_SHA : inputCommitSha;
   if (!commitSha) {
@@ -44,7 +52,7 @@ function getParams() {
   }
 
   const isForcePush = toBoolean(getInput("force-push"));
-  if (!isForcePush) {
+  if (isForcePush === undefined) {
     throw new Error("force-push is invalid");
   }
 
@@ -61,6 +69,7 @@ function getParams() {
     githubToken,
     commitSha,
     isForcePush,
+    validateOnly,
   };
   return params;
 }
@@ -79,6 +88,16 @@ async function run(): Promise<void> {
       return;
     }
     info(`changedMarkdown: ${changedMarkdowns.toString()}`);
+
+    if (params.validateOnly) {
+      info("validate-only is true. Only validate metadata.");
+      for (const markdownPath of changedMarkdowns) {
+        const markdown = readFileSync(markdownPath);
+        info(`validate checking: ${markdownPath}`);
+        await validateMetadata(markdown);
+      }
+      return;
+    }
 
     // マークダウンの保存とプッシュとプルリクエスト作成
     const savedPaths = await saveUpdatedMarkdown(

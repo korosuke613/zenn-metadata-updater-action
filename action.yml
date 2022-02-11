@@ -8,6 +8,9 @@ inputs:
   github-token:
     required: true
     description: 'A GITHUB_TOKEN.'
+  commit-sha:
+    required: false
+    description: 'Git commit SHA'
   dry-run: # change this
     required: false
     description: 'A boolean, if true, no push or pull request will be created.
@@ -32,6 +35,10 @@ inputs:
   force-push:
     required: false
     description: 'A boolean, if true, override the push to the existing branch. (default: false)'
+    default: "false"
+  validate-only:
+    required: false
+    description: 'A boolean, if true, only validation of metadata is performed. (default: false)'
     default: "false"
 runs:
   using: 'node16'

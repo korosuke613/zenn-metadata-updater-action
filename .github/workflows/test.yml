@@ -21,6 +21,7 @@ jobs:
             echo "OK, workspace is clean"
           else
             echo "Failed, workspace is not clean"
+            git status
             exit 1
           fi
 

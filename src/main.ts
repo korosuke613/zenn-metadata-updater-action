@@ -116,7 +116,7 @@ async function run(): Promise<void> {
         branchName
       );
     }
-  } catch (error) {
+  } catch (error: any) {
     setFailed(error.message);
   }
 }

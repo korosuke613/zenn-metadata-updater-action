@@ -1,4 +1,6 @@
-import { getInput, debug, setFailed, info } from "@actions/core";
+import { readFileSync } from "fs";
+import { debug, getInput, info, setFailed } from "@actions/core";
+import { context, getOctokit } from "@actions/github";
 import { ZennMetadata } from "zenn-metadata-updater";
 import {
   createPullRequest,
@@ -9,8 +11,6 @@ import {
   saveUpdatedMarkdown,
   validateMetadata,
 } from "./functions";
-import { context, getOctokit } from "@actions/github";
-import { readFileSync } from "fs";
 
 const toBoolean = (value: string) => {
   if (value === "true") return true;
@@ -102,7 +102,7 @@ async function run(): Promise<void> {
     // マークダウンの保存とプッシュとプルリクエスト作成
     const savedPaths = await saveUpdatedMarkdown(
       params.zennMetadata,
-      changedMarkdowns
+      changedMarkdowns,
     );
 
     // dry-run = true の場合はプッシュ、プルリクエストの作成をスキップする
@@ -120,7 +120,7 @@ async function run(): Promise<void> {
       const branchName = await pushChange(
         savedPath,
         params.commitSha,
-        params.isForcePush
+        params.isForcePush,
       );
       const workflowBranch = process.env.GITHUB_REF;
       if (!workflowBranch) {
@@ -132,11 +132,15 @@ async function run(): Promise<void> {
         context.repo,
         savedPath,
         workflowBranch.replace(/refs\/heads\//, ""),
-        branchName
+        branchName,
       );
     }
-  } catch (error: any) {
-    setFailed(error.message);
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      setFailed(e.message);
+    } else {
+      setFailed("unknown error");
+    }
   }
 }
 

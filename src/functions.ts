@@ -186,3 +186,58 @@ export async function createPullRequest(
     throw e;
   }
 }
+
+function getNextBusinessDay(date: Date) {
+  const day = date.getDay();
+  let add = 1;
+  if (day === 6) add = 2;
+  else if (day === 5) add = 3;
+  date.setDate(date.getDate() + add); // will correctly handle 31+1 > 32 > 1st next month
+  return date;
+}
+
+export function generatePublishedAt(
+  autoGeneratePublishedAt: string,
+  baseDate = new Date(),
+) {
+  const nextBusinessDayRegex = /next_business_day_(\d{2})/;
+  const nextDayRegex = /next_day_(\d{2})/;
+
+  if (
+    !nextBusinessDayRegex.test(autoGeneratePublishedAt) &&
+    !nextDayRegex.test(autoGeneratePublishedAt)
+  ) {
+    throw new Error("auto-generate-published-at format is invalid.");
+  }
+
+  let settingDate = baseDate;
+  if (nextDayRegex.test(autoGeneratePublishedAt)) {
+    settingDate.setDate(settingDate.getDate() + 1);
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    const time = autoGeneratePublishedAt.match(nextDayRegex)![1];
+    settingDate.setHours(Number(time));
+  }
+
+  if (nextBusinessDayRegex.test(autoGeneratePublishedAt)) {
+    settingDate = getNextBusinessDay(settingDate);
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    const time = autoGeneratePublishedAt.match(nextBusinessDayRegex)![1];
+    settingDate.setHours(Number(time));
+  }
+
+  const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(
+    settingDate,
+  );
+  const month = new Intl.DateTimeFormat("en", { month: "2-digit" }).format(
+    settingDate,
+  );
+  const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(
+    settingDate,
+  );
+  const hour = new Intl.DateTimeFormat("en", {
+    hour: "2-digit",
+    hour12: false,
+  }).format(settingDate);
+
+  return `${year}-${month}-${day} ${hour}:00`;
+}

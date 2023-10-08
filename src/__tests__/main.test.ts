@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 import { exec } from "@actions/exec";
 import { Updater, ZennMetadata } from "zenn-metadata-updater";
 import {
+  generatePublishedAt,
   getChangedFiles,
   getMarkdowns,
   isChangedFile,
@@ -111,6 +112,23 @@ describe("isWorkingTreeClean", () => {
     const actual = await isChangedFile(".dirty");
     expect(actual).toEqual(false);
     await exec("rm", ["-f", "./.dirty"]);
+  });
+});
+
+describe("generatePublishedAt", () => {
+  test("business day", () => {
+    const actual = generatePublishedAt(
+      "next_business_day_09",
+      new Date("2021-01-01T00:00:00"),
+    );
+    expect(actual).toEqual("2021-01-04 09:00");
+  });
+  test("day", () => {
+    const actual = generatePublishedAt(
+      "next_day_12",
+      new Date("2021-01-01T00:00:00"),
+    );
+    expect(actual).toEqual("2021-01-02 12:00");
   });
 });
 

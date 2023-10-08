@@ -42035,7 +42035,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createPullRequest = exports.pushChange = exports.isChangedFile = exports.saveUpdatedMarkdown = exports.updateMarkdown = exports.validateMetadata = exports.updateZennMetadata = exports.getMarkdowns = exports.getChangedFiles = void 0;
+exports.generatePublishedAt = exports.createPullRequest = exports.pushChange = exports.isChangedFile = exports.saveUpdatedMarkdown = exports.updateMarkdown = exports.validateMetadata = exports.updateZennMetadata = exports.getMarkdowns = exports.getChangedFiles = void 0;
 const fs_1 = __nccwpck_require__(7147);
 const core_1 = __nccwpck_require__(2186);
 const exec_1 = __nccwpck_require__(1514);
@@ -42203,6 +42203,46 @@ function createPullRequest(octokit, githubRepo, savedPath, workflowBranch, branc
     });
 }
 exports.createPullRequest = createPullRequest;
+function getNextBusinessDay(date) {
+    const day = date.getDay();
+    let add = 1;
+    if (day === 6)
+        add = 2;
+    else if (day === 5)
+        add = 3;
+    date.setDate(date.getDate() + add); // will correctly handle 31+1 > 32 > 1st next month
+    return date;
+}
+function generatePublishedAt(autoGeneratePublishedAt, baseDate = new Date()) {
+    const nextBusinessDayRegex = /next_business_day_(\d{2})/;
+    const nextDayRegex = /next_day_(\d{2})/;
+    if (!nextBusinessDayRegex.test(autoGeneratePublishedAt) &&
+        !nextDayRegex.test(autoGeneratePublishedAt)) {
+        throw new Error("auto-generate-published-at format is invalid.");
+    }
+    let settingDate = baseDate;
+    if (nextDayRegex.test(autoGeneratePublishedAt)) {
+        settingDate.setDate(settingDate.getDate() + 1);
+        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        const time = autoGeneratePublishedAt.match(nextDayRegex)[1];
+        settingDate.setHours(Number(time));
+    }
+    if (nextBusinessDayRegex.test(autoGeneratePublishedAt)) {
+        settingDate = getNextBusinessDay(settingDate);
+        // biome-ignore lint/style/noNonNullAssertion: <explanation>
+        const time = autoGeneratePublishedAt.match(nextBusinessDayRegex)[1];
+        settingDate.setHours(Number(time));
+    }
+    const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(settingDate);
+    const month = new Intl.DateTimeFormat("en", { month: "2-digit" }).format(settingDate);
+    const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(settingDate);
+    const hour = new Intl.DateTimeFormat("en", {
+        hour: "2-digit",
+        hour12: false,
+    }).format(settingDate);
+    return `${year}-${month}-${day} ${hour}:00`;
+}
+exports.generatePublishedAt = generatePublishedAt;
 
 
 /***/ }),
@@ -42239,10 +42279,16 @@ function getParams() {
     const emoji = (0, core_1.getInput)("emoji");
     const type = (0, core_1.getInput)("type");
     const published = (0, core_1.getInput)("published");
+    const publishedAt = (0, core_1.getInput)("published-at");
+    const autoGeneratePublishedAt = (0, core_1.getInput)("auto-generate-published-at");
     const githubToken = (0, core_1.getInput)("github-token");
     const dryRun = toBoolean((0, core_1.getInput)("dry-run"));
     if (dryRun === undefined) {
         throw new Error("dry-run is invalid");
+    }
+    const validate = toBoolean((0, core_1.getInput)("validate"));
+    if (validate === undefined) {
+        throw new Error("validate is invalid");
     }
     const validateOnly = toBoolean((0, core_1.getInput)("validate-only"));
     if (validateOnly === undefined) {
@@ -42256,11 +42302,19 @@ function getParams() {
     if (isForcePush === undefined) {
         throw new Error("force-push is invalid");
     }
+    if (publishedAt !== "" && autoGeneratePublishedAt !== "") {
+        throw new Error("Both `published-at` and `auto-generate-published-at` cannot be specified.");
+    }
+    let publishedAtValue = publishedAt === "" ? undefined : publishedAt;
+    if (autoGeneratePublishedAt !== "") {
+        publishedAtValue = (0, functions_1.generatePublishedAt)(autoGeneratePublishedAt);
+    }
     const zennMetadata = {
         title: title === "" ? undefined : title,
         emoji: emoji === "" ? undefined : emoji,
         type: type === "" ? undefined : type,
         published: toBoolean(published),
+        publishedAt: publishedAtValue,
     };
     const params = {
         dryRun,
@@ -42268,6 +42322,7 @@ function getParams() {
         githubToken,
         commitSha,
         isForcePush,
+        validate,
         validateOnly,
     };
     return params;
@@ -42297,6 +42352,17 @@ function run() {
                     yield (0, functions_1.validateMetadata)(markdown);
                 }
                 return;
+            }
+            if (params.validate) {
+                (0, core_1.info)("validate is true. Validate metadata.");
+                for (const markdownPath of changedMarkdowns) {
+                    if (markdownPath.startsWith("articles/")) {
+                        (0, core_1.info)(`not article, skip validate: ${markdownPath}`);
+                    }
+                    const markdown = (0, fs_1.readFileSync)(markdownPath);
+                    (0, core_1.info)(`validate checking: ${markdownPath}`);
+                    yield (0, functions_1.validateMetadata)(markdown);
+                }
             }
             // マークダウンの保存とプッシュとプルリクエスト作成
             const savedPaths = yield (0, functions_1.saveUpdatedMarkdown)(params.zennMetadata, changedMarkdowns);

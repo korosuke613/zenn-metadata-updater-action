@@ -12,6 +12,40 @@
 
 
 
+## [2.0.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.1.0...v2.0.0) (2023-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* print debug logging for create pull request
+* change default to enable for with.force-push
+* change default to enable for with.force-push
+* using Node.js v20
+* validate not article markdown
+
+### Features
+
+* change default to enable for with.force-push ([ddddf05](https://github.com/korosuke613/zenn-metadata-updater-action/commit/ddddf053c0e2c3e4fa7bda021a30464404e34ce6))
+* print debug logging for create pull request ([f526ce9](https://github.com/korosuke613/zenn-metadata-updater-action/commit/f526ce938c0143dc80baffce6cf38276e8f3295d))
+* using Node.js v20 ([29e636f](https://github.com/korosuke613/zenn-metadata-updater-action/commit/29e636f54d97faad03867e3213875537fd1ee390))
+
+
+### Bug Fixes
+
+* change default to enable for with.force-push ([efaa244](https://github.com/korosuke613/zenn-metadata-updater-action/commit/efaa2441c10d6269cbf6b0271a0ee946c817df5b))
+* **deps:** update dependency @actions/core to v1.10.1 ([93acb0d](https://github.com/korosuke613/zenn-metadata-updater-action/commit/93acb0da88d3401c36c130094f8293e98bce13d2))
+* **deps:** update dependency @actions/core to v1.9.1 [security] ([3e93bfa](https://github.com/korosuke613/zenn-metadata-updater-action/commit/3e93bfa6d69397e7d5edf465365850234cc76827))
+* **deps:** update dependency @actions/core to v1.9.1 [security] ([0e67b2b](https://github.com/korosuke613/zenn-metadata-updater-action/commit/0e67b2bf4061798364d62f7786b69a1c786bf349))
+* **deps:** update dependency @actions/exec to v1.1.1 ([f218ab3](https://github.com/korosuke613/zenn-metadata-updater-action/commit/f218ab33676820efd064dbd5d18f19fef1fd1014))
+* **deps:** update dependency @actions/exec to v1.1.1 ([517c53c](https://github.com/korosuke613/zenn-metadata-updater-action/commit/517c53c360be8192f4d4af74c40bf95dd92f1e38))
+* **deps:** update dependency @actions/github to v5.1.1 ([32d18ac](https://github.com/korosuke613/zenn-metadata-updater-action/commit/32d18acc9979715eca920ce8253f1c5b9f30f4f6))
+* **deps:** update dependency @actions/github to v5.1.1 ([5de09b5](https://github.com/korosuke613/zenn-metadata-updater-action/commit/5de09b53102ff14c5b38be67cae28b5eba307f04))
+* **deps:** update dependency js-yaml to v4.1.0 ([23e4335](https://github.com/korosuke613/zenn-metadata-updater-action/commit/23e43358a373878aa92ec11e7c99843555c39dd5))
+* **deps:** update dependency zenn-metadata-updater to ^0.3.0 ([4afbbd1](https://github.com/korosuke613/zenn-metadata-updater-action/commit/4afbbd1c18d29b66952e1a258f3616e571955045))
+* **deps:** update dependency zenn-metadata-updater to v0.3.1 ([18b7353](https://github.com/korosuke613/zenn-metadata-updater-action/commit/18b7353920ba0eae963d949746d10dfb698bdb5d))
+* error handling for octokit ([b11d966](https://github.com/korosuke613/zenn-metadata-updater-action/commit/b11d9664902a7125172494e8e7d6beed8401fca9))
+* validate not article markdown ([64e8740](https://github.com/korosuke613/zenn-metadata-updater-action/commit/64e874038122f428537498f1f1110baa1656a033))
+
 ## [1.0.6](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.5...v1.0.6) (2021-03-03)
 
 
@@ -97,6 +131,3 @@
 ### Features
 
 * version 1 ([1b2f3ab](https://github.com/korosuke613/zenn-metadata-updater-action/commit/1b2f3ab42685fa692eaa0c1249a38aa64ee29c29))
-
-
-

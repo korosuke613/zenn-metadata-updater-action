@@ -42039,6 +42039,7 @@ exports.createPullRequest = exports.pushChange = exports.isChangedFile = exports
 const fs_1 = __nccwpck_require__(7147);
 const core_1 = __nccwpck_require__(2186);
 const exec_1 = __nccwpck_require__(1514);
+const request_error_1 = __nccwpck_require__(537);
 const zenn_metadata_updater_1 = __nccwpck_require__(5136);
 function getChangedFiles(githubSha) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -42181,15 +42182,21 @@ function pushChange(filePath, originalBranchSha, isForcePush) {
 }
 exports.pushChange = pushChange;
 function createPullRequest(octokit, githubRepo, savedPath, workflowBranch, branchName) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield octokit.rest.pulls.create(Object.assign(Object.assign({}, githubRepo), { title: getCommitMessage(savedPath), head: branchName, base: workflowBranch }));
         }
         catch (e) {
-            const errorMessage = e.errors[0].message;
-            if (errorMessage === null || errorMessage === void 0 ? void 0 : errorMessage.startsWith("A pull request already exists for")) {
-                (0, core_1.info)(`skip because ${errorMessage}`);
-                return;
+            if (e instanceof request_error_1.RequestError && ((_a = e.response) === null || _a === void 0 ? void 0 : _a.data)) {
+                const errorData = e.response.data;
+                if (errorData.errors.length !== 0) {
+                    const errorMessage = errorData.errors[0].message;
+                    if (errorMessage === null || errorMessage === void 0 ? void 0 : errorMessage.startsWith("A pull request already exists for")) {
+                        (0, core_1.info)(`skip because ${errorMessage}`);
+                        return;
+                    }
+                }
             }
             throw e;
         }

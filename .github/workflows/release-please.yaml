@@ -24,6 +24,7 @@ jobs:
         with:
           release-type: node
           package-name: typescript-action
+          changelog-types: github
           token: ${{ steps.app-token.outputs.token }}
 
       - name: tag major and minor versions

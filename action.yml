@@ -1,45 +1,45 @@
-name: 'Zenn Metadata Updater'
-description: 'Update Zenn article metadata and create a pull request.'
+name: "Zenn Metadata Updater"
+description: "Update Zenn article metadata and create a pull request."
 branding:
   icon: refresh-cw
   color: blue
-author: 'Futa Hirakoba <futa-hirakoba@cybozu.co.jp>'
+author: "Futa Hirakoba <korosuke613613@gmail.com>"
 inputs:
   github-token:
-    required: true
-    description: 'A GITHUB_TOKEN.'
+    required: false
+    description: "A GITHUB_TOKEN."
+    default: ${{ github.token }}
   commit-sha:
     required: false
-    description: 'Git commit SHA'
+    description: "Git commit SHA"
   dry-run: # change this
     required: false
-    description: 'A boolean, if true, no push or pull request will be created.
- (default: false)'
+    description: "A boolean, if true, no push or pull request will be created. (default: false)"
     default: "false"
   title:
     required: false
-    description: 'A title of Zenn article.'
+    description: "A title of Zenn article."
   emoji:
     required: false
-    description: 'An emoji of Zenn article.'
+    description: "An emoji of Zenn article."
   type:
     required: false
-    description: 'A type of Zenn article.'
+    description: "A type of Zenn article."
   topics:
     required: false
-    description: 'A list of topic of Zenn article.'
+    description: "A list of topic of Zenn article."
   published:
     required: false
-    description: 'A boolean of published of Zenn article. (default: true)'
+    description: "A boolean of published of Zenn article. (default: true)"
     default: "true"
   force-push:
     required: false
-    description: 'A boolean, if true, override the push to the existing branch. (default: false)'
+    description: "A boolean, if true, override the push to the existing branch. (default: false)"
     default: "false"
   validate-only:
     required: false
-    description: 'A boolean, if true, only validation of metadata is performed. (default: false)'
+    description: "A boolean, if true, only validation of metadata is performed. (default: false)"
     default: "false"
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "node20"
+  main: "dist/index.js"

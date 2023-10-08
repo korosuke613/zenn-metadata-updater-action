@@ -9,7 +9,7 @@ jobs:
     name: Validate Zenn metadata
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2  # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
       - uses: korosuke613/zenn-metadata-updater-action@65602a3e22999b955ef18e06822649a6f3c77bd0 # v1

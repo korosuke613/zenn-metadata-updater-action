@@ -1,17 +1,3 @@
-# [1.1.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.6...v1.1.0) (2022-02-11)
-
-
-### Bug Fixes
-
-* `invalid` error when the `force-push` option is not set. ([07e81b5](https://github.com/korosuke613/zenn-metadata-updater-action/commit/07e81b5e2db5861f295325f2cf6641ba9998f8b5))
-
-
-### Features
-
-* validate metadata ([bb6cc9e](https://github.com/korosuke613/zenn-metadata-updater-action/commit/bb6cc9e2c9bd292415606e0676f2bbb486afcd66))
-
-
-
 ## [2.1.1](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.0...v2.1.1) (2023-10-08)
 
 
@@ -65,6 +51,20 @@
 * **deps:** update dependency zenn-metadata-updater to v0.3.1 ([18b7353](https://github.com/korosuke613/zenn-metadata-updater-action/commit/18b7353920ba0eae963d949746d10dfb698bdb5d))
 * error handling for octokit ([b11d966](https://github.com/korosuke613/zenn-metadata-updater-action/commit/b11d9664902a7125172494e8e7d6beed8401fca9))
 * validate not article markdown ([64e8740](https://github.com/korosuke613/zenn-metadata-updater-action/commit/64e874038122f428537498f1f1110baa1656a033))
+
+## [1.1.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.6...v1.1.0) (2022-02-11)
+
+
+### Bug Fixes
+
+* `invalid` error when the `force-push` option is not set. ([07e81b5](https://github.com/korosuke613/zenn-metadata-updater-action/commit/07e81b5e2db5861f295325f2cf6641ba9998f8b5))
+
+
+### Features
+
+* validate metadata ([bb6cc9e](https://github.com/korosuke613/zenn-metadata-updater-action/commit/bb6cc9e2c9bd292415606e0676f2bbb486afcd66))
+
+
 
 ## [1.0.6](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.0.5...v1.0.6) (2021-03-03)
 
@@ -120,7 +120,7 @@
 
 
 
-# [1.0.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v0.0.0...v1.0.0) (2021-02-28)
+## [1.0.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v0.0.0...v1.0.0) (2021-02-28)
 
 ### Features
 * Generally Available
@@ -140,7 +140,7 @@
 
 
 
-# [0.1.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v0.0.0...v0.1.0) (2021-02-26)
+## [0.1.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v0.0.0...v0.1.0) (2021-02-26)
 
 
 ### Bug Fixes

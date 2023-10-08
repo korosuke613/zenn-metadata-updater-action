@@ -25575,41 +25575,6 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 4153:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.pre = void 0;
-const core_1 = __importDefault(__nccwpck_require__(2186));
-function pre(core) {
-    return __awaiter(this, void 0, void 0, function* () {
-        core.exportVariable("TZ", "Asia/Tokyo");
-    });
-}
-exports.pre = pre;
-pre(core_1.default).catch((error) => {
-    /* c8 ignore next 3 */
-    console.error(error);
-    core_1.default.setFailed(error.message);
-});
-
-
-/***/ }),
-
 /***/ 9491:
 /***/ ((module) => {
 
@@ -25872,12 +25837,30 @@ module.exports = require("zlib");
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(4153);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+var exports = __webpack_exports__;
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core_1 = __nccwpck_require__(2186);
+try {
+    (0, core_1.exportVariable)("TZ", "Asia/Tokyo");
+}
+catch (e) {
+    /* c8 ignore next 3 */
+    console.error(e);
+    if (e instanceof Error) {
+        (0, core_1.setFailed)(e.message);
+    }
+    else {
+        (0, core_1.setFailed)("unknown error");
+    }
+}
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;

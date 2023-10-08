@@ -1,17 +1,13 @@
-import * as core from "@actions/core";
-
-export function pre(core: typeof import("@actions/core")) {
-  core.exportVariable("TZ", "Asia/Tokyo");
-}
+import { exportVariable, setFailed } from "@actions/core";
 
 try {
-  pre(core);
+  exportVariable("TZ", "Asia/Tokyo");
 } catch (e: unknown) {
   /* c8 ignore next 3 */
   console.error(e);
   if (e instanceof Error) {
-    core.setFailed(e.message);
+    setFailed(e.message);
   } else {
-    core.setFailed("unknown error");
+    setFailed("unknown error");
   }
 }

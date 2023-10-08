@@ -36,7 +36,7 @@
     "zenn-metadata-updater": "0.3.0"
   },
   "devDependencies": {
-    "@cybozu/eslint-config": "17.0.3",
+    "@cybozu/eslint-config": "22.0.1",
     "@types/jest": "27.5.2",
     "@types/node": "17.0.45",
     "@types/yaml-front-matter": "4.1.0",

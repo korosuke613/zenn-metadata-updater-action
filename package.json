@@ -35,7 +35,7 @@
     "@actions/github": "^5.0.0",
     "js-yaml": "^4.0.0",
     "yaml-front-matter": "^4.1.1",
-    "zenn-metadata-updater": "^0.2.0"
+    "zenn-metadata-updater": "^0.3.0"
   },
   "devDependencies": {
     "@cybozu/eslint-config": "17.0.0",

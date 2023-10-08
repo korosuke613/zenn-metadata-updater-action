@@ -33,7 +33,7 @@ inputs:
     description: "A boolean of published of Zenn article. (default: true)"
     default: "true"
   force-push:
-    required: false
+    required: true
     description: "A boolean, if true, override the push to the existing branch. (default: false)"
     default: "false"
   validate-only:

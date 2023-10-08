@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { debug, info } from "@actions/core";
 import { exec } from "@actions/exec";
 import { getOctokit } from "@actions/github";
+import { RequestError } from "@octokit/request-error";
 import {
   NotEnoughPropertyError,
   Updater,
@@ -169,14 +170,19 @@ export async function createPullRequest(
       head: branchName,
       base: workflowBranch,
     });
-  } catch (e: any) {
-    debug(JSON.stringify(e, null, 2));
-    const errorMessage: string = e.errors[0].message;
-    if (errorMessage?.startsWith("A pull request already exists for")) {
-      info(`skip because ${errorMessage}`);
-      return;
+  } catch (e: unknown) {
+    if (e instanceof RequestError && e.response?.data) {
+      const errorData = e.response.data as {
+        errors: Array<{ message: string }>;
+      };
+      if (errorData.errors.length !== 0) {
+        const errorMessage: string = errorData.errors[0].message;
+        if (errorMessage?.startsWith("A pull request already exists for")) {
+          info(`skip because ${errorMessage}`);
+          return;
+        }
+      }
     }
-
     throw e;
   }
 }

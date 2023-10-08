@@ -1,3 +1,5 @@
+# Changelog
+
 ## [2.1.1](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.0...v2.1.1) (2023-10-08)
 
 

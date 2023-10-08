@@ -12,6 +12,18 @@
 
 
 
+## [2.1.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.0.0...v2.1.0) (2023-10-08)
+
+
+### Features
+
+* support published-at and auto-generate-published-at ([ac8252f](https://github.com/korosuke613/zenn-metadata-updater-action/commit/ac8252f14127773654a8bbce552f25dda1eea234))
+
+
+### Bug Fixes
+
+* pre script bundle ([4c75535](https://github.com/korosuke613/zenn-metadata-updater-action/commit/4c755354fba8af7c4f1119103e3c6b92585a06c9))
+
 ## [2.0.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v1.1.0...v2.0.0) (2023-10-08)
 
 

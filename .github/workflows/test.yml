@@ -33,7 +33,7 @@ jobs:
       - run: npm run test-lint
       - name: Upload test report
         if: ${{ always() }}
-        uses: mikepenz/action-junit-report@v2
+        uses: mikepenz/action-junit-report@127c778ac944abc0f48a5103964304bab7eb208b # v2
         with:
           report_paths: '**/reports/jest.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}

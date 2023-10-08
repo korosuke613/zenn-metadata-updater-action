@@ -8,7 +8,7 @@ jobs:
   build-package: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v2
         with:
@@ -22,7 +22,7 @@ jobs:
   test-lint: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v2
         with:
@@ -41,7 +41,7 @@ jobs:
   use-with-dry-run: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2 # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
       - run: "git log -m -1 --name-only --pretty=format: HEAD"
@@ -57,7 +57,7 @@ jobs:
   use: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2 # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
       - run: "git log -m -1 --name-only --pretty=format: HEAD"
@@ -71,7 +71,7 @@ jobs:
   use-with-validate-only:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2 # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
       - run: "git log -m -1 --name-only --pretty=format: HEAD"

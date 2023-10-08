@@ -1,4 +1,4 @@
-name: 'CI'
+name: "CI"
 on: # rebuild any PRs and main branch changes
   pull_request:
     branches:
@@ -20,6 +20,9 @@ jobs:
       - run: npm run package
 
   test-lint: # make sure build/ci work properly
+    permissions:
+      contents: read
+      checks: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +38,7 @@ jobs:
         if: ${{ always() }}
         uses: mikepenz/action-junit-report@0a8a5ba57593d67b2e45de2c543b438412382b7b # v4
         with:
-          report_paths: '**/reports/jest.xml'
+          report_paths: "**/reports/jest.xml"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   use-with-dry-run: # make sure the action works on a clean machine without building
@@ -44,15 +47,34 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2 # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run package
+
       - run: "git log -m -1 --name-only --pretty=format: HEAD"
       - run: "git log -m -1 --name-only HEAD"
-      - run: "touch .dirty"
+      - run: |
+          cp articles/sampleMarkdown.md articles/test.md
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add -A
+          git commit -m "test"
       - uses: ./
+        env:
+          TZ: Asia/Tokyo
         with:
           published: true
-          force-push: true
+          auto-generate-published-at: next_business_day_10
           dry-run: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          validate: true
+          commit-sha: .
+      - run: git diff articles/test.md
 
   use-with-validate-only:
     runs-on: ubuntu-latest
@@ -60,6 +82,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2 # Because if `fetch-depth >= 2` is not set, unchanged files will be updated.
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run package
+
       - run: "git log -m -1 --name-only --pretty=format: HEAD"
       - run: "git log -m -1 --name-only HEAD"
       - run: |
@@ -74,7 +106,6 @@ jobs:
         with:
           validate-only: true
           commit-sha: .
-          github-token: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
       - if: ${{ steps.action.outcome == 'failure' }}
         run: echo "Success"

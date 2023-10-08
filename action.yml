@@ -32,14 +32,25 @@ inputs:
     required: false
     description: "A boolean of published of Zenn article. (default: true)"
     default: "true"
+  published-at:
+    required: false
+    description: "A date of published of Zenn article. Don't use auto_generate_published_at option if this option is set.  (default: undefined)"
+  auto-generate-published-at:
+    required: false
+    description: "next_business_day_<HH> (ex: next_business_hour_09), next_day_<HH> or undefined. Don't use published_at option if this option is set. (default: undefined)"
   force-push:
     required: false
     description: "A boolean, if true, override the push to the existing branch. (default: true)"
     default: "true"
+  validate:
+    required: false
+    description: "A boolean, if true, validation of metadata is performed. (default: false)"
+    default: "false"
   validate-only:
     required: false
     description: "A boolean, if true, only validation of metadata is performed. (default: false)"
     default: "false"
 runs:
   using: "node20"
+  pre: "dist/pre.js"
   main: "dist/index.js"

@@ -4,6 +4,7 @@ import { context, getOctokit } from "@actions/github";
 import { ZennMetadata } from "zenn-metadata-updater";
 import {
   createPullRequest,
+  generatePublishedAt,
   getChangedFiles,
   getMarkdowns,
   isChangedFile,
@@ -24,6 +25,7 @@ type Params = {
   githubToken: string;
   commitSha: string;
   isForcePush: boolean;
+  validate: boolean;
   validateOnly: boolean;
 };
 
@@ -33,11 +35,18 @@ function getParams() {
   const emoji = getInput("emoji");
   const type = getInput("type");
   const published = getInput("published");
+  const publishedAt = getInput("published-at");
+  const autoGeneratePublishedAt = getInput("auto-generate-published-at");
   const githubToken = getInput("github-token");
 
   const dryRun = toBoolean(getInput("dry-run"));
   if (dryRun === undefined) {
     throw new Error("dry-run is invalid");
+  }
+
+  const validate = toBoolean(getInput("validate"));
+  if (validate === undefined) {
+    throw new Error("validate is invalid");
   }
 
   const validateOnly = toBoolean(getInput("validate-only"));
@@ -56,11 +65,23 @@ function getParams() {
     throw new Error("force-push is invalid");
   }
 
+  if (publishedAt !== "" && autoGeneratePublishedAt !== "") {
+    throw new Error(
+      "Both `published-at` and `auto-generate-published-at` cannot be specified.",
+    );
+  }
+
+  let publishedAtValue = publishedAt === "" ? undefined : publishedAt;
+  if (autoGeneratePublishedAt !== "") {
+    publishedAtValue = generatePublishedAt(autoGeneratePublishedAt);
+  }
+
   const zennMetadata: Partial<ZennMetadata> = {
     title: title === "" ? undefined : title,
     emoji: emoji === "" ? undefined : emoji,
     type: type === "" ? undefined : (type as "idea" | "tech"),
     published: toBoolean(published),
+    publishedAt: publishedAtValue,
   };
 
   const params: Readonly<Params> = {
@@ -69,6 +90,7 @@ function getParams() {
     githubToken,
     commitSha,
     isForcePush,
+    validate,
     validateOnly,
   };
   return params;
@@ -100,6 +122,18 @@ async function run(): Promise<void> {
         await validateMetadata(markdown);
       }
       return;
+    }
+
+    if (params.validate) {
+      info("validate is true. Validate metadata.");
+      for (const markdownPath of changedMarkdowns) {
+        if (markdownPath.startsWith("articles/")) {
+          info(`not article, skip validate: ${markdownPath}`);
+        }
+        const markdown = readFileSync(markdownPath);
+        info(`validate checking: ${markdownPath}`);
+        await validateMetadata(markdown);
+      }
     }
 
     // マークダウンの保存とプッシュとプルリクエスト作成

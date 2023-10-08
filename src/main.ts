@@ -92,6 +92,9 @@ async function run(): Promise<void> {
     if (params.validateOnly) {
       info("validate-only is true. Only validate metadata.");
       for (const markdownPath of changedMarkdowns) {
+        if (markdownPath.startsWith("articles/")) {
+          info(`not article, skip validate: ${markdownPath}`);
+        }
         const markdown = readFileSync(markdownPath);
         info(`validate checking: ${markdownPath}`);
         await validateMetadata(markdown);

@@ -70,18 +70,18 @@ test("saveUpdatedMarkdown", async () => {
 
   await saveUpdatedMarkdown(
     updateParam,
-    ["src/__tests__/sampleMarkdown.md"],
+    ["articles/sampleMarkdown.md"],
     ".generated.md",
   );
 
   const updater = new Updater();
-  const content = readFileSync("src/__tests__/sampleMarkdown.md.generated.md");
+  const content = readFileSync("articles/sampleMarkdown.md.generated.md");
   updater.load(content);
   const actual = updater.get();
 
   const expected: ZennMetadata = {
     title: "Productivity Weekly (20xx-xx-xx号)",
-    emoji: "",
+    emoji: "🥳",
     type: "idea",
     topics: ["ProductivityWeekly", "生産性向上"],
     published: true,
@@ -91,7 +91,7 @@ test("saveUpdatedMarkdown", async () => {
 });
 
 test("validateMetadata", async () => {
-  const markdown = readFileSync("src/__tests__/sampleMarkdown.md");
+  const markdown = readFileSync("src/__tests__/invalidMarkdown.md");
   await expect(validateMetadata(markdown)).rejects.toThrowError(
     "Invalid metadata: emoji",
   );

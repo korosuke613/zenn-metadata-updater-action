@@ -7,15 +7,14 @@
     ":enableVulnerabilityAlertsWithLabel(security)",
     "schedule:weekly"
   ],
-  "ignorePresets": [
-    "helpers:pinGitHubActionDigests"
-  ],
+  "ignorePresets": ["helpers:pinGitHubActionDigests"],
   "packageRules": [
     {
-      "matchDepTypes": [
-        "action"
+      "matchDepTypes": ["action"],
+      "excludePackagePatterns": [
+        "^actions",
+        "korosuke613/zenn-metadata-updater-action"
       ],
-      "excludePackagePatterns": ["^actions"],
       "pinDigests": true
     },
     {

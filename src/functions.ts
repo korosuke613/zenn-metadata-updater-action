@@ -170,6 +170,7 @@ export async function createPullRequest(
       base: workflowBranch,
     });
   } catch (e: any) {
+    debug(JSON.stringify(e, null, 2));
     const errorMessage: string = e.errors[0].message;
     if (errorMessage?.startsWith("A pull request already exists for")) {
       info(`skip because ${errorMessage}`);

@@ -12,6 +12,14 @@
 
 
 
+## [2.1.1](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.0...v2.1.1) (2023-10-08)
+
+
+### Bug Fixes
+
+* pre import ([4c13ac6](https://github.com/korosuke613/zenn-metadata-updater-action/commit/4c13ac6d2e47d619dab17ca427c2b30f767a28d6))
+* pre import 2 ([ca99faa](https://github.com/korosuke613/zenn-metadata-updater-action/commit/ca99faae82b8aa267e551d5629c44230a6df4b8a))
+
 ## [2.1.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.0.0...v2.1.0) (2023-10-08)
 
 

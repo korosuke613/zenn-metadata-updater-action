@@ -1,0 +1,52 @@
+name: post-release-please
+
+on:
+  pull_request:
+    types: [reopened, labeled, synchronize]
+    branches:
+      - main
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    if: "${{ contains(github.event.pull_request.labels.*.name, 'autorelease: pending') }}"
+
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 2  # amend commit needs to fetch the base branch
+          token: ${{ steps.app-token.outputs.token }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run bundle
+
+      - name: Compare Expected and Actual Directories
+        id: compare
+        run: |
+          if [ "$(git diff --ignore-space-at-eol --text dist/ | wc -l)" -gt "0" ]; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff --ignore-space-at-eol --text dist/
+            echo "diff=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: add commit
+        if: ${{ steps.compare.outputs.diff == 'true' }}
+        run: |
+          git config user.name ${{ vars.GH_APP_NAME }}[bot]
+          git config user.email ${{ vars.GH_APP_NAME }}[bot]@users.noreply.github.com
+          git add ./dist
+          git commit --amend --no-edit
+          git push --force origin HEAD

@@ -1,13 +1,13 @@
+import * as Buffer from "buffer";
+import { readFileSync, writeFileSync } from "fs";
+import { debug, info } from "@actions/core";
 import { exec } from "@actions/exec";
+import { getOctokit } from "@actions/github";
 import {
   NotEnoughPropertyError,
   Updater,
   ZennMetadata,
 } from "zenn-metadata-updater";
-import { debug, info } from "@actions/core";
-import { readFileSync, writeFileSync } from "fs";
-import { getOctokit } from "@actions/github";
-import * as Buffer from "buffer";
 
 export async function getChangedFiles(githubSha: string): Promise<string[]> {
   let changedFiles: string[] = [];
@@ -24,7 +24,7 @@ export async function getChangedFiles(githubSha: string): Promise<string[]> {
   await exec(
     "git",
     ["log", "-m", "-1", "--name-only", "--pretty=format:", githubSha],
-    options
+    options,
   );
   return changedFiles.filter((path) => path !== "");
 }
@@ -35,7 +35,7 @@ export function getMarkdowns(changedFiles: string[]): string[] {
 
 export async function updateZennMetadata(
   updater: Updater,
-  updateParams: Partial<ZennMetadata>
+  updateParams: Partial<ZennMetadata>,
 ) {
   const metadata = updater.get();
   debug(`now metadata: ${JSON.stringify(metadata, null, 2)}`);
@@ -57,7 +57,7 @@ export async function validateMetadata(markdown: Buffer) {
 
 export async function updateMarkdown(
   markdown: Buffer,
-  updateParams: Partial<ZennMetadata>
+  updateParams: Partial<ZennMetadata>,
 ): Promise<Buffer> {
   const updater = new Updater();
   await updater.load(markdown);
@@ -69,7 +69,7 @@ export async function updateMarkdown(
 export async function saveUpdatedMarkdown(
   zennMetaData: Partial<ZennMetadata>,
   changedMarkdowns: string[],
-  postPath: string = ""
+  postPath = "",
 ) {
   const savedPaths = new Array<string>();
   for (const markdownPath of changedMarkdowns) {
@@ -129,7 +129,7 @@ export async function isChangedFile(filePath: string) {
 export async function pushChange(
   filePath: string,
   originalBranchSha: string,
-  isForcePush: boolean
+  isForcePush: boolean,
 ) {
   const fileName = filePath.replace(".", "_");
   const branchName = `zenn-metadata-updater/${fileName}`;
@@ -160,7 +160,7 @@ export async function createPullRequest(
   githubRepo: { owner: string; repo: string },
   savedPath: string,
   workflowBranch: string,
-  branchName: string
+  branchName: string,
 ) {
   try {
     await octokit.rest.pulls.create({
@@ -171,10 +171,7 @@ export async function createPullRequest(
     });
   } catch (e: any) {
     const errorMessage: string = e.errors[0].message;
-    if (
-      errorMessage !== undefined &&
-      errorMessage.startsWith("A pull request already exists for")
-    ) {
+    if (errorMessage?.startsWith("A pull request already exists for")) {
       info(`skip because ${errorMessage}`);
       return;
     }

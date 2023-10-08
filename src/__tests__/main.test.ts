@@ -1,3 +1,6 @@
+import { readFileSync } from "fs";
+import { exec } from "@actions/exec";
+import { Updater, ZennMetadata } from "zenn-metadata-updater";
 import {
   getChangedFiles,
   getMarkdowns,
@@ -6,9 +9,6 @@ import {
   updateZennMetadata,
   validateMetadata,
 } from "../functions";
-import { Updater, ZennMetadata } from "zenn-metadata-updater";
-import { readFileSync } from "fs";
-import { exec } from "@actions/exec";
 
 // This test fail on CI.
 // test("getFiles", async () => {
@@ -71,7 +71,7 @@ test("saveUpdatedMarkdown", async () => {
   await saveUpdatedMarkdown(
     updateParam,
     ["src/__tests__/sampleMarkdown.md"],
-    ".generated.md"
+    ".generated.md",
   );
 
   const updater = new Updater();
@@ -93,7 +93,7 @@ test("saveUpdatedMarkdown", async () => {
 test("validateMetadata", async () => {
   const markdown = readFileSync("src/__tests__/sampleMarkdown.md");
   await expect(validateMetadata(markdown)).rejects.toThrowError(
-    "Invalid metadata: emoji"
+    "Invalid metadata: emoji",
   );
 });
 

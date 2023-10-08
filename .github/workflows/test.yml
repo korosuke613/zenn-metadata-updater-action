@@ -30,7 +30,7 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npm run test-lint
+      - run: npm run ci
       - name: Upload test report
         if: ${{ always() }}
         uses: mikepenz/action-junit-report@0a8a5ba57593d67b2e45de2c543b438412382b7b # v4

@@ -17,7 +17,7 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build-package
+      - run: npm run package
 
   test-lint: # make sure build/ci work properly
     runs-on: ubuntu-latest

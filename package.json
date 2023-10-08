@@ -5,12 +5,10 @@
   "description": "GitHub Action to update metadata in Zenn markdown file.",
   "main": "lib/main.js",
   "scripts": {
-    "build": "tsc",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
-    "build-package": "npm-run-all -l -s build package",
-    "package": "ncc build --source-map --license licenses.txt --minify",
+    "package": "ncc build src/main.ts --license licenses.txt",
     "test": "jest",
     "test:ci": "jest --ci --runInBand",
     "check": "npm-run-all -s build -p test:ci lint",

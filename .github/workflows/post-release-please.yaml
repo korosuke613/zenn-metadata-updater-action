@@ -31,7 +31,7 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run bundle
+      - run: npm run package
 
       - name: Compare Expected and Actual Directories
         id: compare

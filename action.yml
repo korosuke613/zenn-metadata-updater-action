@@ -33,9 +33,9 @@ inputs:
     description: "A boolean of published of Zenn article. (default: true)"
     default: "true"
   force-push:
-    required: true
-    description: "A boolean, if true, override the push to the existing branch. (default: false)"
-    default: "false"
+    required: false
+    description: "A boolean, if true, override the push to the existing branch. (default: true)"
+    default: "true"
   validate-only:
     required: false
     description: "A boolean, if true, only validation of metadata is performed. (default: false)"

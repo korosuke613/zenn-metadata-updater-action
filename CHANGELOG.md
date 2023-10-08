@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.1...v2.1.2) (2023-10-08)
+
+
+### Bug Fixes
+
+* validate publish ([a3623a5](https://github.com/korosuke613/zenn-metadata-updater-action/commit/a3623a58f82f36db6156b87e2b06285be1d721f1))
+
 ## [2.1.1](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.0...v2.1.1) (2023-10-08)
 
 

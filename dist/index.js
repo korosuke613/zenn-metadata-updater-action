@@ -42278,10 +42278,13 @@ function getParams() {
     const title = (0, core_1.getInput)("title");
     const emoji = (0, core_1.getInput)("emoji");
     const type = (0, core_1.getInput)("type");
-    const published = (0, core_1.getInput)("published");
     const publishedAt = (0, core_1.getInput)("published-at");
     const autoGeneratePublishedAt = (0, core_1.getInput)("auto-generate-published-at");
     const githubToken = (0, core_1.getInput)("github-token");
+    const published = toBoolean((0, core_1.getInput)("published"));
+    if (published === undefined) {
+        throw new Error("published is invalid");
+    }
     const dryRun = toBoolean((0, core_1.getInput)("dry-run"));
     if (dryRun === undefined) {
         throw new Error("dry-run is invalid");
@@ -42302,6 +42305,10 @@ function getParams() {
     if (isForcePush === undefined) {
         throw new Error("force-push is invalid");
     }
+    if (published === false &&
+        (publishedAt !== "" || autoGeneratePublishedAt !== "")) {
+        throw new Error("Both `published` is false and `published-at` or `auto-generate-published-at` cannot be specified.");
+    }
     if (publishedAt !== "" && autoGeneratePublishedAt !== "") {
         throw new Error("Both `published-at` and `auto-generate-published-at` cannot be specified.");
     }
@@ -42313,7 +42320,7 @@ function getParams() {
         title: title === "" ? undefined : title,
         emoji: emoji === "" ? undefined : emoji,
         type: type === "" ? undefined : type,
-        published: toBoolean(published),
+        published,
         publishedAt: publishedAtValue,
     };
     const params = {

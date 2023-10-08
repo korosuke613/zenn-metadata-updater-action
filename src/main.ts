@@ -34,10 +34,14 @@ function getParams() {
   const title = getInput("title");
   const emoji = getInput("emoji");
   const type = getInput("type");
-  const published = getInput("published");
   const publishedAt = getInput("published-at");
   const autoGeneratePublishedAt = getInput("auto-generate-published-at");
   const githubToken = getInput("github-token");
+
+  const published = toBoolean(getInput("published"));
+  if (published === undefined) {
+    throw new Error("published is invalid");
+  }
 
   const dryRun = toBoolean(getInput("dry-run"));
   if (dryRun === undefined) {
@@ -65,6 +69,15 @@ function getParams() {
     throw new Error("force-push is invalid");
   }
 
+  if (
+    published === false &&
+    (publishedAt !== "" || autoGeneratePublishedAt !== "")
+  ) {
+    throw new Error(
+      "Both `published` is false and `published-at` or `auto-generate-published-at` cannot be specified.",
+    );
+  }
+
   if (publishedAt !== "" && autoGeneratePublishedAt !== "") {
     throw new Error(
       "Both `published-at` and `auto-generate-published-at` cannot be specified.",
@@ -80,7 +93,7 @@ function getParams() {
     title: title === "" ? undefined : title,
     emoji: emoji === "" ? undefined : emoji,
     type: type === "" ? undefined : (type as "idea" | "tech"),
-    published: toBoolean(published),
+    published,
     publishedAt: publishedAtValue,
   };
 

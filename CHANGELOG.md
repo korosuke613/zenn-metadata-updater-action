@@ -6,6 +6,13 @@
 * pre import ([4c13ac6](https://github.com/korosuke613/zenn-metadata-updater-action/commit/4c13ac6d2e47d619dab17ca427c2b30f767a28d6))
 * pre import 2 ([ca99faa](https://github.com/korosuke613/zenn-metadata-updater-action/commit/ca99faae82b8aa267e551d5629c44230a6df4b8a))
 
+## [2.1.2](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.1...v2.1.2) (2023-10-08)
+
+
+### Bug Fixes
+
+* validate publish ([a3623a5](https://github.com/korosuke613/zenn-metadata-updater-action/commit/a3623a58f82f36db6156b87e2b06285be1d721f1))
+
 ## [2.1.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.0.0...v2.1.0) (2023-10-08)
 
 

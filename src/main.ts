@@ -94,7 +94,7 @@ function getParams() {
     emoji: emoji === "" ? undefined : emoji,
     type: type === "" ? undefined : (type as "idea" | "tech"),
     published,
-    publishedAt: publishedAtValue,
+    published_at: publishedAtValue,
   };
 
   const params: Readonly<Params> = {

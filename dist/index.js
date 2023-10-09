@@ -41935,15 +41935,31 @@ class Updater {
         if (this.metadata.title === "" &&
             this.metadata.title.length <= this.MAX_TITLE_LENGTH // https://github.com/zenn-dev/zenn-editor/blob/07b2c80465466e8830e6486d0f2b0c7a8d4bee45/packages/zenn-model/src/utils.ts#L36-L44
         ) {
+            console.debug(`\`title\` is empty or too long (> ${this.MAX_TITLE_LENGTH}).`);
             metadataTypes.push("title");
         }
         if (typeof this.metadata.published !== "boolean") {
             metadataTypes.push("boolean");
         }
+        if (this.metadata.published === false && this.metadata.published_at) {
+            console.debug("`published_at` needs `published` to be true.");
+            metadataTypes.push("published_at");
+        }
+        if (!this.validPublishedAt(this.metadata.published_at)) {
+            metadataTypes.push("published_at");
+        }
         if (metadataTypes.length !== 0) {
             const stringTypes = metadataTypes.join(", ");
             throw new InvalidMetadataError(stringTypes);
         }
+    }
+    validPublishedAt(publishedAt) {
+        if (publishedAt === undefined) {
+            return true;
+        }
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        const dateWithTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
+        return dateRegex.test(publishedAt) || dateWithTimeRegex.test(publishedAt);
     }
     updateProperty(paramOrKey, value) {
         if (!this.metadata) {
@@ -42321,7 +42337,7 @@ function getParams() {
         emoji: emoji === "" ? undefined : emoji,
         type: type === "" ? undefined : type,
         published,
-        publishedAt: publishedAtValue,
+        published_at: publishedAtValue,
     };
     const params = {
         dryRun,

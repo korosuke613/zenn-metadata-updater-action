@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.3](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.2...v2.1.3) (2023-10-09)
+
+
+### Bug Fixes
+
+* published_at key ([0079dd9](https://github.com/korosuke613/zenn-metadata-updater-action/commit/0079dd9729542e64976bf1a20c490c4db07618db))
+
 ## [2.1.2](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.1...v2.1.2) (2023-10-08)
 
 

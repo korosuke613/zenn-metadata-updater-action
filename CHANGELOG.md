@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.4](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.3...v2.1.4) (2023-11-11)
+
+
+### Bug Fixes
+
+* don't overwriting published_at in markdown ([dee3156](https://github.com/korosuke613/zenn-metadata-updater-action/commit/dee31564f8affded0d1f5ab77b0bebadb75f09c2))
+
 ## [2.1.3](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.2...v2.1.3) (2023-10-09)
 
 

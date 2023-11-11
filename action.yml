@@ -34,10 +34,10 @@ inputs:
     default: "true"
   published-at:
     required: false
-    description: "A date of published of Zenn article. Don't use auto_generate_published_at option if this option is set.  (default: undefined)"
+    description: "A date of published of Zenn article. Don't use auto-generate-published-at option if this option is set.  (default: undefined)"
   auto-generate-published-at:
     required: false
-    description: "next_business_day_<HH> (ex: next_business_hour_09), next_day_<HH> or undefined. Don't use published_at option if this option is set. (default: undefined)"
+    description: "next_business_day_<HH> (ex: next_business_hour_09), next_day_<HH> or undefined. Don't use published-at option if this option is set. Also, if `published_at` is already set in the markdown, nothing is done. (default: undefined)"
   force-push:
     required: false
     description: "A boolean, if true, override the push to the existing branch. (default: true)"

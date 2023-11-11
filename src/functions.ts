@@ -43,6 +43,12 @@ export async function updateZennMetadata(
   debug(`input metadata: ${JSON.stringify(updateParams, null, 2)}`);
   for (const [key, value] of Object.entries(updateParams)) {
     if (value === "" || value === undefined) continue;
+
+    const publishedAtKey: keyof ZennMetadata = "published_at";
+
+    // もしすでに `published_at` が設定されていたら更新しない
+    if (key === publishedAtKey && metadata.published_at !== undefined) continue;
+
     metadata[key] = value;
   }
   debug(`updated metadata: ${JSON.stringify(metadata, null, 2)}`);

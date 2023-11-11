@@ -2,5 +2,8 @@
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "jest.jestCommandLine": "TZ=Asia/Tokyo ./node_modules/.bin/jest"
+  "jest.jestCommandLine": "./node_modules/.bin/jest",
+  "jest.nodeEnv": {
+    "TZ": "Asia/Tokyo"
+  }
 }

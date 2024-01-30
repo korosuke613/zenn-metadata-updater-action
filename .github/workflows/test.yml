@@ -36,7 +36,7 @@ jobs:
       - run: npm run ci
       - name: Upload test report
         if: ${{ always() }}
-        uses: mikepenz/action-junit-report@0831a82caad2465c31c6dd929978f640cb42556c # v4.0.3
+        uses: mikepenz/action-junit-report@5f47764eec0e1c1f19f40c8e60a5ba47e47015c5 # v4.1.0
         with:
           report_paths: "**/reports/jest.xml"
           github_token: ${{ secrets.GITHUB_TOKEN }}

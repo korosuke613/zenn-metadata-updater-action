@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.5](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.4...v2.1.5) (2024-02-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @actions/github to v6 ([eba1fb1](https://github.com/korosuke613/zenn-metadata-updater-action/commit/eba1fb1226632ef802bcf571ae56dcd50a9c980e))
+* **deps:** update dependency @vercel/ncc to v0.38.1 ([ae30b1a](https://github.com/korosuke613/zenn-metadata-updater-action/commit/ae30b1a0b8376d2427be3bdfcc524b628f06fbe4))
+
 ## [2.1.4](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.3...v2.1.4) (2023-11-11)
 
 

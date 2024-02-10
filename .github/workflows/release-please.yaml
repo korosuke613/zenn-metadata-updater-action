@@ -22,8 +22,6 @@ jobs:
       - uses: google-github-actions/release-please-action@cc61a07e2da466bebbc19b3a7dd01d6aecb20d1e # v4.0.2
         id: release
         with:
-          release-type: node
-          package-name: typescript-action
           token: ${{ steps.app-token.outputs.token }}
 
       - name: tag major and minor versions

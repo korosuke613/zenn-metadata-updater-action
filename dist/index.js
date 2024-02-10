@@ -39365,9 +39365,9 @@ const isZennMetadata = (item) => item.title !== undefined;
 class Updater {
     metadata;
     dumpOptions = {
-        flowLevel: 1,
+        flowLevel: -1,
         quotingType: '"',
-        forceQuotes: true,
+        forceQuotes: false,
     };
     content;
     MAX_TITLE_LENGTH = 70;

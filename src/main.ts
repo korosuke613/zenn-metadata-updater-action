@@ -15,7 +15,7 @@ import {
 
 const toBoolean = (value: string) => {
   if (value === "true") return true;
-  else if (value === "false") return false;
+  if (value === "false") return false;
   return undefined;
 };
 

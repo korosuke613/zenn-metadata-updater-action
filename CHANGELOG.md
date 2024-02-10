@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.5...v3.0.0) (2024-02-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** update dependency zenn-metadata-updater to v1
+
+### Bug Fixes
+
+* **deps:** update dependency zenn-metadata-updater to v1 ([4d3c811](https://github.com/korosuke613/zenn-metadata-updater-action/commit/4d3c811023ff5af145738119977dfd806594da8f))
+
 ## [2.1.5](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.4...v2.1.5) (2024-02-10)
 
 

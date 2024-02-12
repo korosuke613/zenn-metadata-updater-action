@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v3.0.0...v3.0.1) (2024-02-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency typescript to v5.3.3 ([a50132d](https://github.com/korosuke613/zenn-metadata-updater-action/commit/a50132d2be570573ab1f462c8bf7169016cf9210))
+
 ## [3.0.0](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v2.1.5...v3.0.0) (2024-02-10)
 
 

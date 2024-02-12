@@ -39753,7 +39753,7 @@ const functions_1 = __nccwpck_require__(4174);
 const toBoolean = (value) => {
     if (value === "true")
         return true;
-    else if (value === "false")
+    if (value === "false")
         return false;
     return undefined;
 };

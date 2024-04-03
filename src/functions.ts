@@ -1,13 +1,13 @@
-import * as Buffer from "buffer";
-import { readFileSync, writeFileSync } from "fs";
+import type * as Buffer from "node:buffer";
+import { readFileSync, writeFileSync } from "node:fs";
 import { debug, info } from "@actions/core";
 import { exec } from "@actions/exec";
-import { getOctokit } from "@actions/github";
+import type { getOctokit } from "@actions/github";
 import { RequestError } from "@octokit/request-error";
 import {
   NotEnoughPropertyError,
   Updater,
-  ZennMetadata,
+  type ZennMetadata,
 } from "zenn-metadata-updater";
 
 export async function getChangedFiles(githubSha: string): Promise<string[]> {

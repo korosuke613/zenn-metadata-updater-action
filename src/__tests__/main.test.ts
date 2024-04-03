@@ -1,6 +1,6 @@
-import { readFileSync } from "fs";
+import { readFileSync } from "node:fs";
 import { exec } from "@actions/exec";
-import { Updater, ZennMetadata } from "zenn-metadata-updater";
+import { Updater, type ZennMetadata } from "zenn-metadata-updater";
 import {
   generatePublishedAt,
   getChangedFiles,

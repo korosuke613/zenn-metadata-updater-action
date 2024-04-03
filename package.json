@@ -5,7 +5,7 @@
   "description": "GitHub Action to update metadata in Zenn markdown file.",
   "main": "lib/main.js",
   "scripts": {
-    "check:apply": "biome check --apply ./src",
+    "check:apply": "biome check --apply-unsafe ./src",
     "check": "biome check ./src",
     "check:ci": "biome ci ./src",
     "package": "npm run package:pre && npm run package:main",

@@ -1,7 +1,7 @@
-import { readFileSync } from "fs";
+import { readFileSync } from "node:fs";
 import { debug, getInput, info, setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import { ZennMetadata } from "zenn-metadata-updater";
+import type { ZennMetadata } from "zenn-metadata-updater";
 import {
   createPullRequest,
   generatePublishedAt,

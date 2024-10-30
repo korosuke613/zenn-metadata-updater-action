@@ -38,8 +38,9 @@ export async function updateZennMetadata(
   updater: Updater,
   updateParams: Partial<ZennMetadata>,
 ) {
-  const metadata = updater.get();
-  debug(`now metadata: ${JSON.stringify(metadata, null, 2)}`);
+  const oldMetadata = structuredClone(updater.get());
+  const newMetadata = structuredClone(updater.get());
+  debug(`now metadata: ${JSON.stringify(oldMetadata, null, 2)}`);
   debug(`input metadata: ${JSON.stringify(updateParams, null, 2)}`);
   for (const [key, value] of Object.entries(updateParams)) {
     if (value === "" || value === undefined) continue;
@@ -47,13 +48,17 @@ export async function updateZennMetadata(
     const publishedAtKey: keyof ZennMetadata = "published_at";
 
     // もしすでに `published_at` が設定されていたら更新しない
-    if (key === publishedAtKey && metadata.published_at !== undefined) continue;
+    if (key === publishedAtKey && oldMetadata.published_at !== undefined)
+      continue;
 
-    metadata[key] = value;
+    // もし `published: true` が設定されていたら `published_at` を更新しない
+    if (key === publishedAtKey && oldMetadata.published === true) continue;
+
+    newMetadata[key] = value;
   }
-  debug(`updated metadata: ${JSON.stringify(metadata, null, 2)}`);
+  debug(`updated metadata: ${JSON.stringify(newMetadata, null, 2)}`);
 
-  return metadata;
+  return newMetadata;
 }
 
 export async function validateMetadata(markdown: Buffer) {

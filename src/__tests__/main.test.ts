@@ -93,8 +93,9 @@ published_at: "2020-01-01 00:00"
     expect(actual).toEqual(expected);
   });
 
-  test("published_at 未設定の場合は published_at を更新する", async () => {
+  test("published: true かつ published_at 未設定の場合は published_at を更新する", async () => {
     const updateParam: Partial<ZennMetadata> = {
+      published: true,
       published_at: "2021-01-01 00:00",
     };
 
@@ -104,7 +105,7 @@ title: "Productivity Weekly (20xx-xx-xx号)"
 emoji: ""
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["ProductivityWeekly", "生産性向上"]
-published: true 
+published: false
 ---`);
 
     const actual = await updateZennMetadata(updater, updateParam);
@@ -115,6 +116,32 @@ published: true
       topics: ["ProductivityWeekly", "生産性向上"],
       published: true,
       published_at: "2021-01-01 00:00",
+    };
+
+    expect(actual).toEqual(expected);
+  });
+
+  test("published: true が設定されている場合は published_at を設定しない", async () => {
+    const updateParam: Partial<ZennMetadata> = {
+      published_at: "2023-12-27 10:00",
+    };
+
+    const updater = new Updater();
+    updater.load(`---
+title: "Productivity Weekly (20xx-xx-xxtrue号)"
+emoji: ""
+type: "idea" # tech: 技術記事 / idea: アイデア
+topics: ["ProductivityWeekly", "生産性向上"]
+published: true
+---`);
+
+    const actual = await updateZennMetadata(updater, updateParam);
+    const expected: Partial<ZennMetadata> = {
+      title: "Productivity Weekly (20xx-xx-xxtrue号)",
+      emoji: "",
+      type: "idea",
+      topics: ["ProductivityWeekly", "生産性向上"],
+      published: true,
     };
 
     expect(actual).toEqual(expected);

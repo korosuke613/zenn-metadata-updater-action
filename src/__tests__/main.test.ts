@@ -25,15 +25,10 @@ test("getFiles", async () => {
 });
 
 test("getMarkdowns", () => {
-  const input = [
-    "__tests__/sampleMarkdown.md",
-    ".eslintrc.js",
-    "test.md",
-    "src/main.ts",
-  ];
+  const input = [".eslintrc.js", "articles/test.md", "src/main.ts"];
 
   const markdownFiles = getMarkdowns(input);
-  const expected = ["__tests__/sampleMarkdown.md", "test.md"];
+  const expected = ["articles/test.md"];
 
   expect(markdownFiles).toEqual(expected);
 });

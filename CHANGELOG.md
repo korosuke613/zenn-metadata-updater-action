@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.0.3](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v3.0.2...v3.0.3) (2025-01-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @actions/core to v1.11.1 ([#399](https://github.com/korosuke613/zenn-metadata-updater-action/issues/399)) ([79db151](https://github.com/korosuke613/zenn-metadata-updater-action/commit/79db15143c8a9067ca4744f8f3aed18053e17bc2))
+* **deps:** update dependency @vercel/ncc to v0.38.3 ([#396](https://github.com/korosuke613/zenn-metadata-updater-action/issues/396)) ([938777a](https://github.com/korosuke613/zenn-metadata-updater-action/commit/938777a4dfa6705182373a9d1efc66f8b1afad66))
+* **deps:** update dependency typescript to v5.7.2 ([#400](https://github.com/korosuke613/zenn-metadata-updater-action/issues/400)) ([c742426](https://github.com/korosuke613/zenn-metadata-updater-action/commit/c74242688b955ba3b8c2912e2359429a74e60de5))
+* exclude other markdowns ([4651a83](https://github.com/korosuke613/zenn-metadata-updater-action/commit/4651a834a9444f9f552a18a8b9cbaaca5318a5ed))
+
 ## [3.0.2](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v3.0.1...v3.0.2) (2024-10-30)
 
 

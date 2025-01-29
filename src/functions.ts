@@ -31,7 +31,10 @@ export async function getChangedFiles(githubSha: string): Promise<string[]> {
 }
 
 export function getMarkdowns(changedFiles: string[]): string[] {
-  return changedFiles.filter((filePath) => filePath.endsWith(".md"));
+  // articles 以下の Markdown ファイルのみを抽出
+  return changedFiles.filter(
+    (filePath) => filePath.endsWith(".md") && filePath.startsWith("articles/"),
+  );
 }
 
 export async function updateZennMetadata(

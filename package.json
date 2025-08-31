@@ -34,7 +34,7 @@
     "@actions/github": "6.0.1",
     "@vercel/ncc": "0.38.3",
     "js-yaml": "4.1.0",
-    "typescript": "5.7.2",
+    "typescript": "5.9.2",
     "yaml-front-matter": "4.1.1",
     "zenn-metadata-updater": "1.0.0"
   },

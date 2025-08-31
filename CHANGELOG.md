@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.4](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v3.0.3...v3.0.4) (2025-08-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @actions/github to v6.0.1 ([#417](https://github.com/korosuke613/zenn-metadata-updater-action/issues/417)) ([3c96113](https://github.com/korosuke613/zenn-metadata-updater-action/commit/3c96113bbb6948b45c255bc7ccdf2fe2e4012c0a))
+* **deps:** update dependency typescript to v5.9.2 ([#421](https://github.com/korosuke613/zenn-metadata-updater-action/issues/421)) ([c6370c1](https://github.com/korosuke613/zenn-metadata-updater-action/commit/c6370c1cd0b1687ab5582b01968c08636258a978))
+
 ## [3.0.3](https://github.com/korosuke613/zenn-metadata-updater-action/compare/v3.0.2...v3.0.3) (2025-01-29)
 
 

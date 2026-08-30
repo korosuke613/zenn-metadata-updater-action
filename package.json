@@ -39,7 +39,7 @@
     "zenn-metadata-updater": "1.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.5.11",
     "@types/jest": "29.5.14",
     "@types/node": "20.17.50",
     "@types/yaml-front-matter": "4.1.3",
